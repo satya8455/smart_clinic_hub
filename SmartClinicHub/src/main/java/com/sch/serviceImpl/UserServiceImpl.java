@@ -1,9 +1,6 @@
 package com.sch.serviceImpl;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +18,7 @@ import com.sch.entity.User;
 import com.sch.enums.Role;
 import com.sch.repository.ClinicRepository;
 import com.sch.repository.UserRepository;
-import com.sch.service.JwtService;
+import com.sch.service.EmailService;
 import com.sch.service.UserService;
 
 @Service
@@ -39,6 +36,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private JwtServiceImpl jwtService;
 
+	@Autowired
+	private EmailService emailService;
 	@Override
 	public Response<?> registerSuperadmin(RegistrationDto registrationDto) {
 		try {
@@ -108,19 +107,16 @@ public class UserServiceImpl implements UserService {
 				admin.setName(registrationDto.getName());
 				admin.setEmail(registrationDto.getEmail());
 				admin.setPhone(registrationDto.getPhone());
-				admin.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+				admin.setPassword(passwordEncoder.encode("Rst@123"));
 				admin.setRole(Role.ADMIN);
 				admin.setClinic(savedClinic);
 				admin.setIsActive(true);
 				admin.setCreatedAt(new Date());
 				admin.setCreatedBy(loggedUser);
 				User savedAdmin = userRepository.save(admin);
-
-				Map<String, Object> data = new HashMap<>();
-				data.put("clinic", savedClinic);
-				data.put("adminUser", savedAdmin);
-
-				return new Response<>(HttpStatus.OK.value(), "Clinic and Admin registered successfully.", data);
+				emailService.sendPasswordResetEmail(savedAdmin);
+				
+				return new Response<>(HttpStatus.OK.value(), "Clinic and Admin registered successfully.", null);
 			} else {
 				Optional<Clinic> clinicOptional = clinicRepository.findById(registrationDto.getClinicId());
 				if (clinicOptional.isEmpty()) {
