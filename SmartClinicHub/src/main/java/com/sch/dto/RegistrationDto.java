@@ -15,6 +15,8 @@ public class RegistrationDto {
     private String phone;
 
     private String password;
+    
+    private String address;
 
     private Role role;
 
@@ -33,6 +35,21 @@ public class RegistrationDto {
 	private Long  createdBy;
  
 	private Long  updatedBy;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// clinic
+	private Long clinicId;
+	private String clinicName;
+	private String clinicEmail;
+	private String clinicPhoneNo;
 
 	public Long getId() {
 		return id;
@@ -144,6 +161,49 @@ public class RegistrationDto {
 
 	public void setUpdatedBy(Long updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+	
+
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Long getClinicId() {
+		return clinicId;
+	}
+
+	public void setClinicId(Long clinicId) {
+		this.clinicId = clinicId;
+	}
+
+	public String getClinicName() {
+		return clinicName;
+	}
+
+	public void setClinicName(String clinicName) {
+		this.clinicName = clinicName;
+	}
+
+	public String getClinicEmail() {
+		return clinicEmail;
+	}
+
+	public void setClinicEmail(String clinicEmail) {
+		this.clinicEmail = clinicEmail;
+	}
+
+	public String getClinicPhoneNo() {
+		return clinicPhoneNo;
+	}
+
+	public void setClinicPhoneNo(String clinicPhoneNo) {
+		this.clinicPhoneNo = clinicPhoneNo;
 	}
 
 	public RegistrationDto(Long id, String name, String email, String phone, String password, Role role, Long clinic,

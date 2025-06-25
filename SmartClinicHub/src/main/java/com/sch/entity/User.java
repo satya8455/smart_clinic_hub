@@ -2,7 +2,7 @@ package com.sch.entity;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
+import java.util.Date;
 
 import com.sch.enums.Role;
 
@@ -50,7 +50,7 @@ public class User {
     private LocalTime availableTo;
 
     @Column(name="created_at")
-    private LocalDateTime createdAt;
+    private Date createdAt;
     @ManyToOne
 	@JoinColumn(name="create_by")
 	private User  createdBy;
@@ -123,10 +123,10 @@ public class User {
 	public void setAvailableTo(LocalTime availableTo) {
 		this.availableTo = availableTo;
 	}
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 	public User getCreatedBy() {
@@ -143,7 +143,7 @@ public class User {
 	}
 	public User(Long id, String name, String email, String phone, String password, Role role, Clinic clinic,
 			Department department, Boolean isActive, LocalTime availableFrom, LocalTime availableTo,
-			LocalDateTime createdAt, User createdBy, User updatedBy) {
+			Date createdAt, User createdBy, User updatedBy) {
 		super();
 		this.id = id;
 		this.name = name;
