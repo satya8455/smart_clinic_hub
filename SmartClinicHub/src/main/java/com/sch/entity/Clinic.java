@@ -1,5 +1,6 @@
 package com.sch.entity;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,14 +25,15 @@ public class Clinic {
     private String phone;
 
     private String subdomain;
-
+    private String email;
     @ManyToOne
     @JoinColumn(name = "created_by")
     private User createdBy;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
+    private Date createdAt;
+    @Column(name = "is_active")
+	private Boolean isActive;
 	public Long getId() {
 		return id;
 	}
@@ -104,28 +106,60 @@ public class Clinic {
 
 
 
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
 
 
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
 
 
-	public Clinic(Long id, String name, String address, String phone, String subdomain, User createdBy,
-			LocalDateTime createdAt) {
+	public String getEmail() {
+		return email;
+	}
+
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+
+	
+
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
+
+
+
+
+
+	public Clinic(Long id, String name, String address, String phone, String subdomain, String email, User createdBy,
+			Date createdAt, Boolean isActive) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.phone = phone;
 		this.subdomain = subdomain;
+		this.email = email;
 		this.createdBy = createdBy;
 		this.createdAt = createdAt;
+		this.isActive = isActive;
 	}
 
 
