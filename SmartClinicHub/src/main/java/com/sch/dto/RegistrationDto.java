@@ -5,7 +5,7 @@ import java.time.LocalTime;
 
 import com.sch.enums.Role;
 
-public class UserDto {
+public class RegistrationDto {
 	private Long id;
 
     private String name;
@@ -146,7 +146,7 @@ public class UserDto {
 		this.updatedBy = updatedBy;
 	}
 
-	public UserDto(Long id, String name, String email, String phone, String password, Role role, Long clinic,
+	public RegistrationDto(Long id, String name, String email, String phone, String password, Role role, Long clinic,
 			Long department, Boolean isActive, LocalTime availableFrom, LocalTime availableTo, LocalDateTime createdAt,
 			Long createdBy, Long updatedBy) {
 		super();
@@ -166,11 +166,10 @@ public class UserDto {
 		this.updatedBy = updatedBy;
 	}
 
-	public UserDto() {
+	public RegistrationDto() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
 	
-
 }
