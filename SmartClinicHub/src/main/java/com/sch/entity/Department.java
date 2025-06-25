@@ -22,7 +22,15 @@ public class Department {
 
     private String name;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
+    @ManyToOne
+	@JoinColumn(name="create_by")
+	private User  createdBy;
+    @ManyToOne
+	@JoinColumn(name="update_by")
+	private User  updatedBy;
     // Getters and Setters
+    
+    
 }

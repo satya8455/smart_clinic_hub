@@ -30,7 +30,7 @@ public class Clinic {
     private User createdBy;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     // Getters and Setters
 }
