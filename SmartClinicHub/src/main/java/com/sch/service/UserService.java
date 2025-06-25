@@ -11,4 +11,6 @@ public interface UserService {
 	Response<?> registerClient(RegistrationDto registrationDto);
 	Response<Object> generateToken(LoginRequest loginRequest);
 
+	Response<?> getAllAdmin();
+
 }

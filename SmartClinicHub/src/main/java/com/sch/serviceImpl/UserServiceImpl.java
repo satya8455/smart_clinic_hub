@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import com.sch.dto.LoginRequest;
 import com.sch.dto.LoginResponseDto;
 import com.sch.dto.RegistrationDto;
 import com.sch.dto.Response;
+import com.sch.dto.UserDto;
 import com.sch.entity.Clinic;
 import com.sch.entity.User;
 import com.sch.enums.Role;
@@ -78,6 +81,7 @@ public class UserServiceImpl implements UserService {
 	public Response<?> registerClient(RegistrationDto registrationDto) {
 		try {
 			Optional<User> loggedUserOptional = customizedUserDetailsService.getUserDetails();
+
 			if (loggedUserOptional.isEmpty() || !loggedUserOptional.get().getRole().equals(Role.SUPER_ADMIN)) {
 				return new Response<>(HttpStatus.BAD_REQUEST.value(), "You are not authorized to register a clinic.",
 						null);
@@ -89,7 +93,6 @@ public class UserServiceImpl implements UserService {
 			}
 
 			if (registrationDto.getClinicId() == null) {
-
 				if (clinicRepository.findByEmail(registrationDto.getClinicEmail()).isPresent()) {
 					return new Response<>(HttpStatus.BAD_REQUEST.value(), "Clinic already exists.", null);
 				}
@@ -97,7 +100,7 @@ public class UserServiceImpl implements UserService {
 				Clinic clinic = new Clinic();
 				clinic.setName(registrationDto.getClinicName());
 				clinic.setEmail(registrationDto.getClinicEmail());
-				clinic.setPhone(registrationDto.getClinicPhoneNo()); 
+				clinic.setPhone(registrationDto.getClinicPhoneNo());
 				clinic.setAddress(registrationDto.getAddress());
 				clinic.setIsActive(true);
 				clinic.setCreatedBy(loggedUser);
@@ -188,10 +191,32 @@ public class UserServiceImpl implements UserService {
 			return new Response<>(HttpStatus.OK.value(), "Login successful.", response);
 
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			e.printStackTrace();
 			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong.", null);
 		}
 
+	}
+
+	@Override
+	public Response<?> getAllAdmin() {
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("SUPER_ADMIN"))) {
+				List<User> list = userRepository.findAll();
+				if (list.isEmpty()) {
+					return new Response<>(HttpStatus.BAD_REQUEST.value(), "No data found", null);
+				}
+				List<UserDto> list1 = list.stream().filter(u -> u.getRole().equals(Role.ADMIN))														
+						.map(User::convertToDto) 
+						.toList();
+
+				return new Response<>(HttpStatus.OK.value(), "Success.", list1);
+			}
+			return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not authorized", null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong.", null);
+		}
 	}
 
 }

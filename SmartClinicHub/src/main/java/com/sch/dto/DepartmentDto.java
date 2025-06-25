@@ -1,6 +1,7 @@
 package com.sch.dto;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 
 public class DepartmentDto {
@@ -10,7 +11,7 @@ public class DepartmentDto {
 
     private String name;
 
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
 	private Long  createdBy;
    
@@ -40,11 +41,11 @@ public class DepartmentDto {
 		this.name = name;
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
@@ -64,7 +65,7 @@ public class DepartmentDto {
 		this.updatedBy = updatedBy;
 	}
 
-	public DepartmentDto(Long id, Long clinic, String name, LocalDateTime createdAt, Long createdBy, Long updatedBy) {
+	public DepartmentDto(Long id, Long clinic, String name, Date createdAt, Long createdBy, Long updatedBy) {
 		super();
 		this.id = id;
 		this.clinic = clinic;

@@ -1,5 +1,6 @@
 package com.sch.entity;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +23,7 @@ public class Department {
 
     private String name;
 
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @ManyToOne
 	@JoinColumn(name="create_by")
@@ -49,10 +50,10 @@ public class Department {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 	public User getCreatedBy() {
@@ -67,7 +68,7 @@ public class Department {
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
 	}
-	public Department(Long id, Clinic clinic, String name, LocalDateTime createdAt, User createdBy, User updatedBy) {
+	public Department(Long id, Clinic clinic, String name, Date createdAt, User createdBy, User updatedBy) {
 		super();
 		this.id = id;
 		this.clinic = clinic;
