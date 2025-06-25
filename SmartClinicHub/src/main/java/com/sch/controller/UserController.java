@@ -31,4 +31,10 @@ public class UserController {
 		}
 		return new ResponseEntity<>(validationResponse,HttpStatus.valueOf(validationResponse.getStatusCode()));
 	}
+	
+	@PostMapping("/register/client")
+	public ResponseEntity<?> registerClient(@RequestBody RegistrationDto registrationDto){
+			Response<?> response=userService.registerClient(registrationDto);
+			return new ResponseEntity<>(response,HttpStatus.valueOf(response.getStatusCode()));
+	}
 }

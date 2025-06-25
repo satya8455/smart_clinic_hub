@@ -1,9 +1,9 @@
 package com.sch.entity;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
+import com.sch.dto.UserDto;
 import com.sch.enums.Role;
 
 import jakarta.persistence.Column;
@@ -57,6 +57,8 @@ public class User {
     @ManyToOne
 	@JoinColumn(name="update_by")
 	private User  updatedBy;
+    @Column(name="updated_at")
+    private Date updatedAt;
 	public Long getId() {
 		return id;
 	}
@@ -141,9 +143,17 @@ public class User {
 	public void setUpdatedBy(User updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+	
+	
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 	public User(Long id, String name, String email, String phone, String password, Role role, Clinic clinic,
 			Department department, Boolean isActive, LocalTime availableFrom, LocalTime availableTo,
-			Date createdAt, User createdBy, User updatedBy) {
+			Date createdAt, User createdBy, User updatedBy,Date updatedAt) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -159,13 +169,31 @@ public class User {
 		this.createdAt = createdAt;
 		this.createdBy = createdBy;
 		this.updatedBy = updatedBy;
+		this.updatedAt=updatedAt;
 	}
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
 	
-    // Getters and Setters
+	public UserDto convertToDto() {
+		return new UserDto(this.id!=null?this.id:null,
+			this.name!=null?this.name:null,
+			this.email!=null?this.email:null,
+			this.phone!=null?this.phone:null,
+			this.password!=null?this.password:null,
+			this.role!=null?this.role:null,
+			this.clinic!=null?this.clinic.getId():null,
+			this.department!=null?this.department.getId():null,
+			this.isActive!=null?this.isActive:null,
+			this.availableFrom!=null?this.availableFrom:null,
+			this.availableTo!=null?this.availableTo:null,
+			this.createdAt!=null?this.createdAt:null,
+			this.createdBy!=null?this.createdBy.getId():null,
+			this.updatedBy!=null?this.updatedBy.getId():null,
+			this.updatedAt!=null?this.updatedAt:null);
+	}
     
     
 }

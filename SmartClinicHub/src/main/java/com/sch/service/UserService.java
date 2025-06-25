@@ -7,4 +7,6 @@ public interface UserService {
 
 	Response<?> registerSuperadmin(RegistrationDto registrationDto);
 
+	Response<?> registerClient(RegistrationDto registrationDto);
+
 }

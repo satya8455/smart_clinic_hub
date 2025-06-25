@@ -2,6 +2,7 @@ package com.sch.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import com.sch.enums.PaymentMode;
 
@@ -19,7 +20,7 @@ public class BillDto {
 
 	private PaymentMode paymentMode = PaymentMode.PENDING;
 
-	private LocalDateTime createdAt;
+	private Date createdAt;
 
 	public Long getId() {
 		return id;
@@ -69,16 +70,16 @@ public class BillDto {
 		this.paymentMode = paymentMode;
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
 	public BillDto(Long id, Long token, Long patient, BigDecimal totalAmount, Boolean paid, PaymentMode paymentMode,
-			LocalDateTime createdAt) {
+			Date createdAt) {
 		super();
 		this.id = id;
 		this.token = token;

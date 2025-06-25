@@ -2,6 +2,7 @@ package com.sch.dto;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 
 import com.sch.enums.Role;
 
@@ -28,11 +29,13 @@ public class UserDto {
     
     private LocalTime availableTo;
 
-    private LocalDateTime createdAt;
+    private Date createdAt;
  
 	private Long  createdBy;
  
 	private Long  updatedBy;
+	
+	private Date updatedAt;
 
 	public Long getId() {
 		return id;
@@ -122,11 +125,11 @@ public class UserDto {
 		this.availableTo = availableTo;
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
@@ -146,9 +149,18 @@ public class UserDto {
 		this.updatedBy = updatedBy;
 	}
 
+	
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
 	public UserDto(Long id, String name, String email, String phone, String password, Role role, Long clinic,
-			Long department, Boolean isActive, LocalTime availableFrom, LocalTime availableTo, LocalDateTime createdAt,
-			Long createdBy, Long updatedBy) {
+			Long department, Boolean isActive, LocalTime availableFrom, LocalTime availableTo, Date createdAt,
+			Long createdBy, Long updatedBy,Date updatedAt) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -164,6 +176,7 @@ public class UserDto {
 		this.createdAt = createdAt;
 		this.createdBy = createdBy;
 		this.updatedBy = updatedBy;
+		this.updatedAt=updatedAt;
 	}
 
 	public UserDto() {
