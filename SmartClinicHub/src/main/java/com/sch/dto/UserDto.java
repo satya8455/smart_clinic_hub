@@ -19,9 +19,9 @@ public class UserDto {
 
     private Role role;
 
-    private Long clinic;
+    private Long clinicId;
 
-    private Long department;
+    private Long departmentId;
 
     private Boolean isActive;
 
@@ -85,20 +85,20 @@ public class UserDto {
 		this.role = role;
 	}
 
-	public Long getClinic() {
-		return clinic;
+	public Long getClinicId() {
+		return clinicId;
 	}
 
-	public void setClinic(Long clinic) {
-		this.clinic = clinic;
+	public void setClinicId(Long clinicId) {
+		this.clinicId = clinicId;
 	}
 
-	public Long getDepartment() {
-		return department;
+	public Long getDepartmentId() {
+		return departmentId;
 	}
 
-	public void setDepartment(Long department) {
-		this.department = department;
+	public void setDepartmentId(Long departmentId) {
+		this.departmentId = departmentId;
 	}
 
 	public Boolean getIsActive() {
@@ -158,8 +158,8 @@ public class UserDto {
 		this.updatedAt = updatedAt;
 	}
 
-	public UserDto(Long id, String name, String email, String phone, String password, Role role, Long clinic,
-			Long department, Boolean isActive, LocalTime availableFrom, LocalTime availableTo, Date createdAt,
+	public UserDto(Long id, String name, String email, String phone, String password, Role role, Long clinicId,
+			Long departmentId, Boolean isActive, LocalTime availableFrom, LocalTime availableTo, Date createdAt,
 			Long createdBy, Long updatedBy,Date updatedAt) {
 		super();
 		this.id = id;
@@ -168,8 +168,8 @@ public class UserDto {
 		this.phone = phone;
 		this.password = password;
 		this.role = role;
-		this.clinic = clinic;
-		this.department = department;
+		this.clinicId = clinicId;
+		this.departmentId = departmentId;
 		this.isActive = isActive;
 		this.availableFrom = availableFrom;
 		this.availableTo = availableTo;

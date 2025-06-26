@@ -9,13 +9,13 @@ import com.sch.enums.TokenStatus;
 public class TokenDto {
 	private Long id;
 
-	private Long clinic;
+	private Long clinicId;
 
-	private Long department;
+	private Long departmentId;
 
 	private Long doctor;
 
-	private Long patient;
+	private Long patientId;
 
 	private Integer tokenNumber;
 
@@ -31,20 +31,20 @@ public class TokenDto {
 		this.id = id;
 	}
 
-	public Long getClinic() {
-		return clinic;
+	public Long getClinicId() {
+		return clinicId;
 	}
 
-	public void setClinic(Long clinic) {
-		this.clinic = clinic;
+	public void setClinicId(Long clinicId) {
+		this.clinicId = clinicId;
 	}
 
-	public Long getDepartment() {
-		return department;
+	public Long getDepartmentId() {
+		return departmentId;
 	}
 
-	public void setDepartment(Long department) {
-		this.department = department;
+	public void setDepartmentId(Long departmentId) {
+		this.departmentId = departmentId;
 	}
 
 	public Long getDoctor() {
@@ -55,12 +55,12 @@ public class TokenDto {
 		this.doctor = doctor;
 	}
 
-	public Long getPatient() {
-		return patient;
+	public Long getPatientId() {
+		return patientId;
 	}
 
-	public void setPatient(Long patient) {
-		this.patient = patient;
+	public void setPatientId(Long patientId) {
+		this.patientId = patientId;
 	}
 
 	public Integer getTokenNumber() {
@@ -87,14 +87,14 @@ public class TokenDto {
 		this.createdAt = createdAt;
 	}
 
-	public TokenDto(Long id, Long clinic, Long department, Long doctor, Long patient, Integer tokenNumber,
+	public TokenDto(Long id, Long clinicId, Long departmentId, Long doctor, Long patientId, Integer tokenNumber,
 			TokenStatus status, LocalDateTime createdAt) {
 		super();
 		this.id = id;
-		this.clinic = clinic;
-		this.department = department;
+		this.clinicId = clinicId;
+		this.departmentId = departmentId;
 		this.doctor = doctor;
-		this.patient = patient;
+		this.patientId = patientId;
 		this.tokenNumber = tokenNumber;
 		this.status = status;
 		this.createdAt = createdAt;

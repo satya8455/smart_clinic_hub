@@ -2,11 +2,12 @@ package com.sch.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class TestOrderItemDto {
 	private Long id;
 	
-	private Long token;
+	private Long tokenId;
 
 	private String testName;
 	
@@ -16,7 +17,7 @@ public class TestOrderItemDto {
 
 	private Long addedBy;
 
-	private LocalDateTime addedAt;
+	private Date addedAt;
 
 	public Long getId() {
 		return id;
@@ -27,11 +28,11 @@ public class TestOrderItemDto {
 	}
 
 	public Long getToken() {
-		return token;
+		return tokenId;
 	}
 
-	public void setToken(Long token) {
-		this.token = token;
+	public void setToken(Long tokenId) {
+		this.tokenId = tokenId;
 	}
 
 	public String getTestName() {
@@ -66,19 +67,19 @@ public class TestOrderItemDto {
 		this.addedBy = addedBy;
 	}
 
-	public LocalDateTime getAddedAt() {
+	public Date getAddedAt() {
 		return addedAt;
 	}
 
-	public void setAddedAt(LocalDateTime addedAt) {
+	public void setAddedAt(Date addedAt) {
 		this.addedAt = addedAt;
 	}
 
-	public TestOrderItemDto(Long id, Long token, String testName, BigDecimal testPrice, Boolean isCompleted,
-			Long addedBy, LocalDateTime addedAt) {
+	public TestOrderItemDto(Long id, Long tokenId, String testName, BigDecimal testPrice, Boolean isCompleted,
+			Long addedBy, Date addedAt) {
 		super();
 		this.id = id;
-		this.token = token;
+		this.tokenId = tokenId;
 		this.testName = testName;
 		this.testPrice = testPrice;
 		this.isCompleted = isCompleted;

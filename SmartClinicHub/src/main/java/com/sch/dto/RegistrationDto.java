@@ -2,6 +2,7 @@ package com.sch.dto;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 
 import com.sch.enums.Role;
 
@@ -20,9 +21,7 @@ public class RegistrationDto {
 
     private Role role;
 
-    private Long clinic;
-
-    private Long department;
+    private Long departmentId;
 
     private Boolean isActive;
 
@@ -30,20 +29,11 @@ public class RegistrationDto {
     
     private LocalTime availableTo;
 
-    private LocalDateTime createdAt;
+    private Date createdAt;
  
 	private Long  createdBy;
  
 	private Long  updatedBy;
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	// clinic
 	private Long clinicId;
@@ -99,20 +89,13 @@ public class RegistrationDto {
 		this.role = role;
 	}
 
-	public Long getClinic() {
-		return clinic;
-	}
-
-	public void setClinic(Long clinic) {
-		this.clinic = clinic;
-	}
 
 	public Long getDepartment() {
-		return department;
+		return departmentId;
 	}
 
-	public void setDepartment(Long department) {
-		this.department = department;
+	public void setDepartment(Long departmentId) {
+		this.departmentId = departmentId;
 	}
 
 	public Boolean getIsActive() {
@@ -139,11 +122,11 @@ public class RegistrationDto {
 		this.availableTo = availableTo;
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
@@ -206,8 +189,8 @@ public class RegistrationDto {
 		this.clinicPhoneNo = clinicPhoneNo;
 	}
 
-	public RegistrationDto(Long id, String name, String email, String phone, String password, Role role, Long clinic,
-			Long department, Boolean isActive, LocalTime availableFrom, LocalTime availableTo, LocalDateTime createdAt,
+	public RegistrationDto(Long id, String name, String email, String phone, String password, Role role, Long clinicId,
+			Long departmentId, Boolean isActive, LocalTime availableFrom, LocalTime availableTo, Date createdAt,
 			Long createdBy, Long updatedBy) {
 		super();
 		this.id = id;
@@ -216,8 +199,8 @@ public class RegistrationDto {
 		this.phone = phone;
 		this.password = password;
 		this.role = role;
-		this.clinic = clinic;
-		this.department = department;
+		this.clinicId = clinicId;
+		this.departmentId = departmentId;
 		this.isActive = isActive;
 		this.availableFrom = availableFrom;
 		this.availableTo = availableTo;

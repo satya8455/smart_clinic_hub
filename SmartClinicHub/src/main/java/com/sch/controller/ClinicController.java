@@ -12,7 +12,6 @@ import com.sch.dto.Response;
 import com.sch.service.ClinicService;
 
 @RestController
-@RequestMapping("clinic")
 public class ClinicController {
 	@Autowired
 	ClinicService clinicService;

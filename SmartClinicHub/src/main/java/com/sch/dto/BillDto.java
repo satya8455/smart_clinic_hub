@@ -10,9 +10,9 @@ import com.sch.enums.PaymentMode;
 public class BillDto {
 	private Long id;
 
-	private Long token;
+	private Long tokenId;
 
-	private Long patient;
+	private Long patientId;
 
 	private BigDecimal totalAmount;
 
@@ -30,20 +30,20 @@ public class BillDto {
 		this.id = id;
 	}
 
-	public Long getToken() {
-		return token;
+	public Long getTokenId() {
+		return tokenId;
 	}
 
-	public void setToken(Long token) {
-		this.token = token;
+	public void setTokenId(Long tokenId) {
+		this.tokenId = tokenId;
 	}
 
-	public Long getPatient() {
-		return patient;
+	public Long getPatientId() {
+		return patientId;
 	}
 
-	public void setPatient(Long patient) {
-		this.patient = patient;
+	public void setPatientId(Long patientId) {
+		this.patientId = patientId;
 	}
 
 	public BigDecimal getTotalAmount() {
@@ -78,12 +78,12 @@ public class BillDto {
 		this.createdAt = createdAt;
 	}
 
-	public BillDto(Long id, Long token, Long patient, BigDecimal totalAmount, Boolean paid, PaymentMode paymentMode,
+	public BillDto(Long id, Long tokenId, Long patientId, BigDecimal totalAmount, Boolean paid, PaymentMode paymentMode,
 			Date createdAt) {
 		super();
 		this.id = id;
-		this.token = token;
-		this.patient = patient;
+		this.tokenId = tokenId;
+		this.patientId = patientId;
 		this.totalAmount = totalAmount;
 		this.paid = paid;
 		this.paymentMode = paymentMode;

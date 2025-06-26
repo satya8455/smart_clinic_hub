@@ -1,6 +1,7 @@
 package com.sch.dto;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import com.sch.entity.Clinic;
 import com.sch.enums.Gender;
@@ -9,7 +10,7 @@ import com.sch.enums.Gender;
 public class PatientDto {
 	private Long id;
 	
-	private Long clinic;
+	private Long clinicId;
 
 	private String name;
 
@@ -25,7 +26,7 @@ public class PatientDto {
 	
 	private String relationName;
 	
-	private LocalDateTime createdAt;
+	private Date createdAt;
 
 	public Long getId() {
 		return id;
@@ -35,12 +36,12 @@ public class PatientDto {
 		this.id = id;
 	}
 
-	public Long getClinic() {
-		return clinic;
+	public Long getClinicId() {
+		return clinicId;
 	}
 
-	public void setClinic(Long clinic) {
-		this.clinic = clinic;
+	public void setClinicId(Long clinicId) {
+		this.clinicId = clinicId;
 	}
 
 	public String getName() {
@@ -99,19 +100,19 @@ public class PatientDto {
 		this.relationName = relationName;
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public PatientDto(Long id, Long clinic, String name, String phone, Integer age, Gender gender,
-			String languagePref, String relationType, String relationName, LocalDateTime createdAt) {
+	public PatientDto(Long id, Long clinicId, String name, String phone, Integer age, Gender gender,
+			String languagePref, String relationType, String relationName, Date createdAt) {
 		super();
 		this.id = id;
-		this.clinic = clinic;
+		this.clinicId = clinicId;
 		this.name = name;
 		this.phone = phone;
 		this.age = age;
