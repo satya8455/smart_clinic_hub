@@ -2,6 +2,8 @@ package com.sch.entity;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.sch.dto.DepartmentDto;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -82,5 +84,12 @@ public class Department {
 		// TODO Auto-generated constructor stub
 	}
     
-    
+    public DepartmentDto convertToDto() {
+    	return new DepartmentDto(this.id!=null?this.id:null,
+    		this.clinic!=null?this.clinic.getId():null,
+    		this.name!=null?this.name:null,
+    		this.createdAt!=null?this.createdAt:null,
+    		this.createdBy!=null?this.createdBy.getId():null,
+    		this.updatedBy!=null?this.updatedBy.getId():null);
+    }
 }
