@@ -13,11 +13,10 @@ import com.sch.dto.Response;
 import com.sch.service.DepartmentService;
 
 @RestController
-@RequestMapping("department")
 public class DepartmentController {
 	@Autowired
 	DepartmentService departmentService;
-	@PostMapping("/create")
+	@PostMapping("/api/create/department")
 	public ResponseEntity<?> createDepartment(@RequestBody DepartmentDto departmentDto){
 		Response<?> response= departmentService.createDepartment(departmentDto);
 		return new ResponseEntity<>(response,HttpStatus.valueOf(response.getStatusCode()));

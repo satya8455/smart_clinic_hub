@@ -30,63 +30,64 @@ public class DepartmentServiceImpl implements DepartmentService {
 	ClinicRepository clinicRepository;
 
 	@Override
-	public Response<?> createDepartment(DepartmentDto departmentDto) {
-		try {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ADMIN"))) {
-				if (departmentDto.getId() == null) {
-					Department department = new Department();
-					department.setName(departmentDto.getName());
-					department.setCreatedAt(new Date());
-					Optional<User> optionalUser = userRepository.findByEmail(authentication.getName());
-					if (optionalUser.isEmpty()) {
-						return new Response<>(HttpStatus.UNAUTHORIZED.value(), "User Not found", null);
-					}
-					Optional<Clinic> optionalClinic = clinicRepository.findById(departmentDto.getClinic());
-					if (optionalClinic.isEmpty()) {
-						return new Response<>(HttpStatus.BAD_REQUEST.value(), "Clinic not found", null);
-					}
-					Optional<User> optionalData=userRepository.findByRoleAndClinic(optionalUser.get().getRole(),optionalClinic.get());
-					if(optionalData.isEmpty()) {
-						return new Response<>(HttpStatus.BAD_REQUEST.value()," The Admin is not assigned to this clinic",null);
-					}
-					department.setCreatedBy(optionalData.get().getCreatedBy());
-					department.setClinic(optionalData.get().getClinic());
-					departmentRepository.save(department);
-					return new Response<>(HttpStatus.OK.value(), "Department created successfully", null);
-				}
-				// update
-				Optional<Department> optionalDept = departmentRepository.findById(departmentDto.getId());
-				if (optionalDept.isEmpty()) {
-					return new Response<>(HttpStatus.BAD_REQUEST.value(), "Clinic not found", null);
-				}
-				Department department = optionalDept.get();
-				department.setName(departmentDto.getName());
-				department.setCreatedAt(new Date());
-				Optional<User> optionalUser = userRepository.findByEmail(authentication.getName());
-				if (optionalUser.isEmpty()) {
-					return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not found", null);
-				}
-				Optional<Clinic> optionalClinic = clinicRepository.findById(departmentDto.getClinic());
-				if (optionalClinic.isEmpty()) {
-					return new Response<>(HttpStatus.BAD_REQUEST.value(), "Clinic not found", null);
-				}
-				Optional<User> optionalData=userRepository.findByRoleAndClinic(optionalUser.get().getRole(),optionalClinic.get());
-				if(optionalData.isEmpty()) {
-					return new Response<>(HttpStatus.BAD_REQUEST.value()," The Admin is not assigned to this clinic",null);
-				}
-				department.setCreatedBy(optionalUser.get());
-				department.setClinic(optionalClinic.get());
-				departmentRepository.save(department);
-				return new Response<>(HttpStatus.OK.value(), "Department updated successfully", null);
-			}
-			return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not authorized", null);
+	public Response<?> createDepartment(DepartmentDto departmentDto) {try {
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
-		}
+	    if (authentication.getAuthorities().stream().noneMatch(auth -> auth.getAuthority().equals("ADMIN"))) {
+	        return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not authorized", null);
+	    }
 
+	    Optional<User> optionalUser = userRepository.findByEmail(authentication.getName());
+	    if (optionalUser.isEmpty()) {
+	        return new Response<>(HttpStatus.UNAUTHORIZED.value(), "User not found", null);
+	    }
+
+	    User loggedInUser = optionalUser.get();
+
+	    Optional<Clinic> optionalClinic = clinicRepository.findById(departmentDto.getClinicId());
+	    if (optionalClinic.isEmpty()) {
+	        return new Response<>(HttpStatus.BAD_REQUEST.value(), "Clinic not found", null);
+	    }
+
+	    Clinic clinic = optionalClinic.get();
+
+	    // Ensure that the Admin is assigned to this clinic
+	    if (!clinic.equals(loggedInUser.getClinic())) {
+	        return new Response<>(HttpStatus.BAD_REQUEST.value(), "Admin is not assigned to this clinic", null);
+	    }
+
+	    Department department;
+	    if (departmentDto.getId() == null) {
+	        // Create new department
+	        department = new Department();
+	        department.setCreatedAt(new Date());
+	        department.setCreatedBy(loggedInUser);
+	        department.setClinic(clinic);
+	        department.setName(departmentDto.getName());
+
+	        departmentRepository.save(department);
+	        return new Response<>(HttpStatus.OK.value(), "Department created successfully", null);
+	    } else {
+	        // Update existing department
+	        Optional<Department> optionalDept = departmentRepository.findById(departmentDto.getId());
+	        if (optionalDept.isEmpty()) {
+	            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Department not found", null);
+	        }
+
+	        department = optionalDept.get();
+	        department.setName(departmentDto.getName());
+	        department.setClinic(clinic);
+	        department.setCreatedAt(new Date());
+	        department.setCreatedBy(loggedInUser);
+
+	        departmentRepository.save(department);
+	        return new Response<>(HttpStatus.OK.value(), "Department updated successfully", null);
+	    }
+
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
 	}
+}
 
 }

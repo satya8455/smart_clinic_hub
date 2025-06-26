@@ -1,13 +1,12 @@
 package com.sch.dto;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 
 public class DepartmentDto {
 	private Long id;
 	
-    private Long clinic;
+    private Long clinicId;
 
     private String name;
 
@@ -25,12 +24,12 @@ public class DepartmentDto {
 		this.id = id;
 	}
 
-	public Long getClinic() {
-		return clinic;
+	public Long getClinicId() {
+		return clinicId;
 	}
 
-	public void setClinic(Long clinic) {
-		this.clinic = clinic;
+	public void setClinicId(Long clinic) {
+		this.clinicId = clinic;
 	}
 
 	public String getName() {
@@ -65,10 +64,10 @@ public class DepartmentDto {
 		this.updatedBy = updatedBy;
 	}
 
-	public DepartmentDto(Long id, Long clinic, String name, Date createdAt, Long createdBy, Long updatedBy) {
+	public DepartmentDto(Long id, Long clinicId, String name, Date createdAt, Long createdBy, Long updatedBy) {
 		super();
 		this.id = id;
-		this.clinic = clinic;
+		this.clinicId = clinicId;
 		this.name = name;
 		this.createdAt = createdAt;
 		this.createdBy = createdBy;
