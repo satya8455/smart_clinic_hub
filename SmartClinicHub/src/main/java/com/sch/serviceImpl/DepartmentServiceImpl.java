@@ -57,7 +57,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	    }
 
 	    Department department;
-	    if (departmentDto.getId() == null) {
+	    if (departmentDto .getId() == null) {
 	        // Create new department
 	        department = new Department();
 	        department.setCreatedAt(new Date());
