@@ -1,6 +1,7 @@
 package com.sch.dto;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class ClinicDto {
 	 private Long id;
@@ -15,7 +16,7 @@ public class ClinicDto {
 
 	    private Long createdBy;
 
-	    private LocalDateTime createdAt;
+	    private Date createdAt;
 
 		public Long getId() {
 			return id;
@@ -65,16 +66,16 @@ public class ClinicDto {
 			this.createdBy = createdBy;
 		}
 
-		public LocalDateTime getCreatedAt() {
+		public Date getCreatedAt() {
 			return createdAt;
 		}
 
-		public void setCreatedAt(LocalDateTime createdAt) {
+		public void setCreatedAt(Date createdAt) {
 			this.createdAt = createdAt;
 		}
 
 		public ClinicDto(Long id, String name, String address, String phone, String subdomain, Long createdBy,
-				LocalDateTime createdAt) {
+				Date createdAt) {
 			super();
 			this.id = id;
 			this.name = name;

@@ -12,4 +12,6 @@ public interface UserService {
 	Response<Object> generateToken(LoginRequest loginRequest);
 	Response<Object>resetPassword(Long id,String newPassword);
 
+	Response<?> getAllAdmin();
+
 }
