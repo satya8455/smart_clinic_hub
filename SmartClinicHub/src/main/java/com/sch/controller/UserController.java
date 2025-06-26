@@ -50,6 +50,5 @@ public class UserController {
 	public ResponseEntity<?> resetPassword(@RequestParam Long id, @RequestParam String newPassword) {
 	Response<Object> resetPassword = userService.resetPassword(id, newPassword);
 	return new ResponseEntity<>(resetPassword, HttpStatus.valueOf(resetPassword.getStatusCode()));
-
 	}
 }

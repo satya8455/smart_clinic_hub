@@ -11,6 +11,6 @@ import com.sch.entity.Department;
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long>{
 
-	List<Department> findAllByClinicId(Clinic clinic);
+	List<Department> findAllByClinicId(Long clinicId);
 
 }
