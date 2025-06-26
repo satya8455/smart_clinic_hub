@@ -1,7 +1,9 @@
 package com.sch.entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
+import com.sch.dto.PatientDto;
 import com.sch.enums.Gender;
 
 import jakarta.persistence.Column;
@@ -44,9 +46,9 @@ public class Patient {
 	@Column(name="relation_name")
 	private String relationName;
 	@Column(name = "created_at")
-	private LocalDateTime createdAt;
+	private Date createdAt;
 	public Patient(Long id, Clinic clinic, String name, String phone, Integer age, Gender gender, String languagePref,
-			String relationType, String relationName, LocalDateTime createdAt) {
+			String relationType, String relationName, Date createdAt) {
 		super();
 		this.id = id;
 		this.clinic = clinic;
@@ -117,14 +119,24 @@ public class Patient {
 	public void setRelationName(String relationName) {
 		this.relationName = relationName;
 	}
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	// Getters and Setters
-	
+public PatientDto convertToDto() {	
+	return new PatientDto(this.id!=null?this.id:null,
+			this.clinic!=null?this.clinic.getId():null,
+			this.name!=null?this.name:null,
+			this.phone!=null?this.phone:null,
+			this.age!=null?this.age:null,
+			this.gender!=null?this.gender:null,
+			this.languagePref!=null?this.languagePref:null,
+			this.relationType!=null?this.relationType:null,
+			this.relationName!=null?this.relationName:null,
+			this.createdAt!=null?this.createdAt:null);
+}
 	
 }

@@ -2,7 +2,9 @@ package com.sch.entity;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 
+import com.sch.dto.TokenDto;
 import com.sch.enums.TokenStatus;
 
 import jakarta.persistence.Column;
@@ -47,7 +49,7 @@ public class Token {
 	private TokenStatus status;
 
 	@Column(name = "created_at")
-	private LocalDateTime createdAt;
+	private Date createdAt;
 
 	public Long getId() {
 		return id;
@@ -105,16 +107,16 @@ public class Token {
 		this.status = status;
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
 	public Token(Long id, Clinic clinic, Department department, User doctor, Patient patient, Integer tokenNumber,
-			TokenStatus status, LocalDateTime createdAt) {
+			TokenStatus status, Date createdAt) {
 		super();
 		this.id = id;
 		this.clinic = clinic;
@@ -131,6 +133,15 @@ public class Token {
 		// TODO Auto-generated constructor stub
 	}
 
-	// Getters and Setters
+	public TokenDto convertToDto() {
+		return new TokenDto(this.id!=null?this.id:null,
+			this.clinic!=null?this.clinic.getId():null,
+			this.department!=null?this.department.getId():null,
+			this.doctor!=null?this.doctor.getId():null,
+			this.patient!=null?this.patient.getId():null,
+			this.tokenNumber!=null?this.tokenNumber:null,
+			this.status!=null?this.status:null,
+			this.createdAt!=null?this.createdAt:null);
+	}
 	
 }

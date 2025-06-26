@@ -1,6 +1,7 @@
 package com.sch.dto;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import com.sch.enums.TokenStatus;
 
@@ -13,7 +14,7 @@ public class TokenDto {
 
 	private Long departmentId;
 
-	private Long doctor;
+	private Long doctorId;
 
 	private Long patientId;
 
@@ -21,7 +22,7 @@ public class TokenDto {
 
 	private TokenStatus status;
 
-	private LocalDateTime createdAt;
+	private Date createdAt;
 
 	public Long getId() {
 		return id;
@@ -48,11 +49,11 @@ public class TokenDto {
 	}
 
 	public Long getDoctor() {
-		return doctor;
+		return doctorId;
 	}
 
-	public void setDoctor(Long doctor) {
-		this.doctor = doctor;
+	public void setDoctorId(Long doctorId) {
+		this.doctorId = doctorId;
 	}
 
 	public Long getPatientId() {
@@ -79,21 +80,21 @@ public class TokenDto {
 		this.status = status;
 	}
 
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public TokenDto(Long id, Long clinicId, Long departmentId, Long doctor, Long patientId, Integer tokenNumber,
-			TokenStatus status, LocalDateTime createdAt) {
+	public TokenDto(Long id, Long clinicId, Long departmentId, Long doctorId, Long patientId, Integer tokenNumber,
+			TokenStatus status, Date createdAt) {
 		super();
 		this.id = id;
 		this.clinicId = clinicId;
 		this.departmentId = departmentId;
-		this.doctor = doctor;
+		this.doctorId = doctorId;
 		this.patientId = patientId;
 		this.tokenNumber = tokenNumber;
 		this.status = status;

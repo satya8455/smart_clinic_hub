@@ -2,7 +2,9 @@ package com.sch.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
+import com.sch.dto.BillDto;
 import com.sch.enums.PaymentMode;
 
 import jakarta.persistence.Column;
@@ -39,8 +41,10 @@ public class Bill {
 
 	@Enumerated(EnumType.STRING)
 	private PaymentMode paymentMode = PaymentMode.PENDING;
+	
 	@Column(name = "created_at")
-	private LocalDateTime createdAt;
+	private Date createdAt;
+	
 	public Long getId() {
 		return id;
 	}
@@ -77,14 +81,14 @@ public class Bill {
 	public void setPaymentMode(PaymentMode paymentMode) {
 		this.paymentMode = paymentMode;
 	}
-	public LocalDateTime getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(LocalDateTime createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 	public Bill(Long id, Token token, Patient patient, BigDecimal totalAmount, Boolean paid, PaymentMode paymentMode,
-			LocalDateTime createdAt) {
+			Date createdAt) {
 		super();
 		this.id = id;
 		this.token = token;
@@ -99,6 +103,14 @@ public class Bill {
 		// TODO Auto-generated constructor stub
 	}
 
-	// Getters and Setters
+	public BillDto convertToDTo() {
+		return new BillDto(this.id!=null?this.id:null,
+			this.token!=null?this.token.getId():null,
+			this.patient!=null?this.patient.getId():null,
+			this.totalAmount!=null?this.totalAmount:null,
+			this.paid!=null?this.paid:null,
+			this.paymentMode!=null?this.paymentMode:null,
+			this.createdAt!=null?this.createdAt:null);
+	}
 	
 }
