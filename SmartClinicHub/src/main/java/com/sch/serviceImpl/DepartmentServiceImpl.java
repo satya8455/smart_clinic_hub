@@ -1,6 +1,8 @@
 package com.sch.serviceImpl;
 
+import java.lang.StackWalker.Option;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +90,5 @@ public class DepartmentServiceImpl implements DepartmentService {
 	    e.printStackTrace();
 	    return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
 	}
-}
 
 }

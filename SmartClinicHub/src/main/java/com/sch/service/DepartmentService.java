@@ -7,4 +7,6 @@ public interface DepartmentService {
 
 	Response<?> createDepartment(DepartmentDto departmentDto);
 
+	Response<?> getAllDeptByClinicId(Long clinicId);
+
 }
