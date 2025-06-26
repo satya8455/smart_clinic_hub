@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sch.dto.RegistrationDto;
@@ -15,7 +16,6 @@ import com.sch.service.UserService;
 import com.sch.service.ValidationService;
 
 @RestController
-@RequestMapping("user")
 public class UserController {
 	@Autowired
 	UserService userService;
@@ -36,5 +36,12 @@ public class UserController {
 	public ResponseEntity<?> registerClient(@RequestBody RegistrationDto registrationDto){
 			Response<?> response=userService.registerClient(registrationDto);
 			return new ResponseEntity<>(response,HttpStatus.valueOf(response.getStatusCode()));
+	}
+	
+	@PostMapping("/reset-password")
+	public ResponseEntity<?> resetPassword(@RequestParam Long id, @RequestParam String newPassword) {
+	Response<Object> resetPassword = userService.resetPassword(id, newPassword);
+	return new ResponseEntity<>(resetPassword, HttpStatus.valueOf(resetPassword.getStatusCode()));
+
 	}
 }

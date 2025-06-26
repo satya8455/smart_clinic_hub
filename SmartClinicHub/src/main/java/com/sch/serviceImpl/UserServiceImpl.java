@@ -22,7 +22,7 @@ import com.sch.service.EmailService;
 import com.sch.service.UserService;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService {	
 	@Autowired
 	UserRepository userRepository;
 
@@ -189,5 +189,29 @@ public class UserServiceImpl implements UserService {
 		}
 
 	}
+
+	@Override
+	public Response<Object> resetPassword(Long id, String newPassword) {
+		try {
+
+			Optional<User> optionalUser = userRepository.findById(id);
+			if (optionalUser.isPresent()) {
+
+				User user = optionalUser.get();
+				user.setPassword(passwordEncoder.encode(newPassword));
+				userRepository.save(user);
+				return new Response<>(HttpStatus.OK.value(), "password reset Successfully", null);
+			}
+			return new Response<>(HttpStatus.BAD_REQUEST.value(), "User doesn't exist", null);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			return new Response<>(HttpStatus.BAD_REQUEST.value(), "Invalid reset request.", null);
+		}
+
+	}
+	
+	
+	
 
 }

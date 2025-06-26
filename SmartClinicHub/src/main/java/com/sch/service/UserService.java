@@ -10,5 +10,6 @@ public interface UserService {
 
 	Response<?> registerClient(RegistrationDto registrationDto);
 	Response<Object> generateToken(LoginRequest loginRequest);
+	Response<Object>resetPassword(Long id,String newPassword);
 
 }
