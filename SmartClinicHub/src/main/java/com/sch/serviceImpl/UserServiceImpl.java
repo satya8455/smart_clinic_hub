@@ -1,10 +1,13 @@
 
 package com.sch.serviceImpl;
 
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.usertype.LoggableUserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -19,15 +22,17 @@ import com.sch.dto.RegistrationDto;
 import com.sch.dto.Response;
 import com.sch.dto.UserDto;
 import com.sch.entity.Clinic;
+import com.sch.entity.Department;
 import com.sch.entity.User;
 import com.sch.enums.Role;
 import com.sch.repository.ClinicRepository;
+import com.sch.repository.DepartmentRepository;
 import com.sch.repository.UserRepository;
 import com.sch.service.EmailService;
 import com.sch.service.UserService;
 
 @Service
-public class UserServiceImpl implements UserService {	
+public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepository userRepository;
 
@@ -43,6 +48,10 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	DepartmentRepository departmentRepository;
+
 	@Override
 	public Response<?> registerSuperadmin(RegistrationDto registrationDto) {
 		try {
@@ -120,7 +129,7 @@ public class UserServiceImpl implements UserService {
 				admin.setCreatedBy(loggedUser);
 				User savedAdmin = userRepository.save(admin);
 				emailService.sendPasswordResetEmail(savedAdmin);
-				
+
 				return new Response<>(HttpStatus.OK.value(), "Clinic and Admin registered successfully.", null);
 			} else {
 				Optional<Clinic> clinicOptional = clinicRepository.findById(registrationDto.getClinicId());
@@ -215,9 +224,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 	}
-	
-	
-	
+
 	public Response<?> getAllAdmin() {
 		try {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -226,8 +233,7 @@ public class UserServiceImpl implements UserService {
 				if (list.isEmpty()) {
 					return new Response<>(HttpStatus.BAD_REQUEST.value(), "No data found", null);
 				}
-				List<UserDto> list1 = list.stream().filter(u -> u.getRole().equals(Role.ADMIN))														
-						.map(User::convertToDto) 
+				List<UserDto> list1 = list.stream().filter(u -> u.getRole().equals(Role.ADMIN)).map(User::convertToDto)
 						.toList();
 
 				return new Response<>(HttpStatus.OK.value(), "Success.", list1);
@@ -238,5 +244,114 @@ public class UserServiceImpl implements UserService {
 			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong.", null);
 		}
 	}
+
+	@Override
+	public Response<?> registerStaff(RegistrationDto registrationDto) {
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+			if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ADMIN"))) {
+
+				if (registrationDto.getId() == null) {
+					User user = new User();
+					user.setName(registrationDto.getName());
+					user.setEmail(registrationDto.getEmail());
+					user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+					user.setPhone(registrationDto.getPhone());
+
+					Optional<User> optionalUser = userRepository.findByEmail(authentication.getName());
+					if (optionalUser.isEmpty()) {
+						return new Response<>(HttpStatus.BAD_REQUEST.value(), "User admin not found", null);
+					}
+
+					user.setRole(registrationDto.getRole());
+					user.setCreatedBy(optionalUser.get());
+					user.setCreatedAt(new Date());
+					user.setIsActive(true);
+					if (optionalUser.get().getClinic() == null) {
+						return new Response<>(HttpStatus.BAD_REQUEST.value(), "Clinic not found", null);
+					}
+					Clinic clinic = optionalUser.get().getClinic();
+					user.setClinic(clinic);
+					if (registrationDto.getRole().equals(Role.DOCTOR)) {
+						Optional<Department> optionalDept = departmentRepository
+								.findByIdAndClinic(registrationDto.getDepartmentId(), clinic);
+						if (optionalDept.isEmpty()) {
+							return new Response<>(HttpStatus.BAD_REQUEST.value(), "Department doesn't exists", null);
+						}
+						user.setDepartment(optionalDept.get());
+					}
+
+					userRepository.save(user);
+					return new Response<>(HttpStatus.OK.value(), "Registration successful", null);
+				}
+			}
+			return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not authorized", null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Something went wrong",null);
+		}
+	}
+
+	@Override
+	public Response<?> filterUser(Role role, Long clinicId) {
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			List<User> lists = new ArrayList<>();
+			if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("SUPER_ADMIN"))) {
+				if (role == null || clinicId == null) {
+					return new Response<>(HttpStatus.BAD_REQUEST.value(), "Provide valid role and clinic id", null);
+				}
+				lists = userRepository.findAllByRoleAndClinicId(role, clinicId);
+			} else {
+				if (role == null || role.equals(Role.SUPER_ADMIN)) {
+					return new Response<>(HttpStatus.BAD_REQUEST.value(), "Provide valid role", null);
+				}
+				Optional<User> optionalUser = userRepository.findByEmail(authentication.getName());
+				if (optionalUser.isEmpty()) {
+					return new Response<>(HttpStatus.BAD_REQUEST.value(), "User not found", null);
+				}
+				User user = optionalUser.get();
+				lists = userRepository.findAllByRoleAndClinicId(role, user.getClinic().getId());
+			}
+			if (lists.isEmpty()) {
+				return new Response<>(HttpStatus.BAD_REQUEST.value(), "No data found", null);
+			}
+			List<UserDto> list = lists.stream().map(User::convertToDto).toList();
+			return new Response<>(HttpStatus.OK.value(), "Success", list);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Something went wrong",null);
+		}
+	}
+
+	@Override
+	public Response<?> mentionAvailabilityOfDoctor(Long doctorId) {
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+			if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("RECEPTIONIST"))) {
+
+				Optional<User> optionalUser = userRepository.findById(doctorId);
+				if (optionalUser.isEmpty()) {
+					return new Response<>(HttpStatus.BAD_REQUEST.value(), "User not found", null);
+				}
+				User user = optionalUser.get();
+				LocalTime currentTime=LocalTime.of(9, 0);
+				user.setAvailableFrom(currentTime);
+				user.setAvailableTo(currentTime.plusHours(3));
+				userRepository.save(user);
+				return new Response<>(HttpStatus.OK.value(), "Success", null);
+			}
+			return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not authorized", null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Something went wrong",null);
+		}
+	}
+
 
 }

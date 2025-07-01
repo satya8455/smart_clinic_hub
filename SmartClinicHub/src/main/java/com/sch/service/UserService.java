@@ -3,6 +3,7 @@ package com.sch.service;
 import com.sch.dto.LoginRequest;
 import com.sch.dto.RegistrationDto;
 import com.sch.dto.Response;
+import com.sch.enums.Role;
 
 public interface UserService {
 
@@ -13,5 +14,11 @@ public interface UserService {
 	Response<Object>resetPassword(Long id,String newPassword);
 
 	Response<?> getAllAdmin();
+
+	Response<?> registerStaff(RegistrationDto registrationDto);
+
+	Response<?> filterUser(Role role, Long clinicId);
+
+	Response<?> mentionAvailabilityOfDoctor(Long doctorId);
 
 }

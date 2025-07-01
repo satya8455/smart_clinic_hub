@@ -32,8 +32,14 @@ public class DepartmentController {
 	}
 	
 	@GetMapping("/api/get/dept/by/clinic/id")
-	public ResponseEntity<?> getDeptByClinicId(@RequestParam Long clinicId){
-		Response<?> response=departmentService.getAllDeptByClinicId(clinicId);
+	public ResponseEntity<?> getDeptByClinicId(){
+		Response<?> response=departmentService.getAllDeptByClinicId();
+		return new ResponseEntity<>(response,HttpStatus.valueOf(response.getStatusCode()));
+	}
+	
+	@GetMapping("/api/delete/department")
+	public ResponseEntity<?> deActivateDepartment(@RequestParam Long deptId){
+		Response<?> response=departmentService.deActivateDepartment(deptId);
 		return new ResponseEntity<>(response,HttpStatus.valueOf(response.getStatusCode()));
 	}
 }

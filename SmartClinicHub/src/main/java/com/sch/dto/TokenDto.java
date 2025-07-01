@@ -18,7 +18,7 @@ public class TokenDto {
 
 	private Long patientId;
 
-	private Integer tokenNumber;
+	private String tokenNumber;
 
 	private TokenStatus status;
 
@@ -48,7 +48,7 @@ public class TokenDto {
 		this.departmentId = departmentId;
 	}
 
-	public Long getDoctor() {
+	public Long getDoctorId() {
 		return doctorId;
 	}
 
@@ -64,11 +64,11 @@ public class TokenDto {
 		this.patientId = patientId;
 	}
 
-	public Integer getTokenNumber() {
+	public String getTokenNumber() {
 		return tokenNumber;
 	}
 
-	public void setTokenNumber(Integer tokenNumber) {
+	public void setTokenNumber(String tokenNumber) {
 		this.tokenNumber = tokenNumber;
 	}
 
@@ -88,7 +88,7 @@ public class TokenDto {
 		this.createdAt = createdAt;
 	}
 
-	public TokenDto(Long id, Long clinicId, Long departmentId, Long doctorId, Long patientId, Integer tokenNumber,
+	public TokenDto(Long id, Long clinicId, Long departmentId, Long doctorId, Long patientId, String tokenNumber,
 			TokenStatus status, Date createdAt) {
 		super();
 		this.id = id;

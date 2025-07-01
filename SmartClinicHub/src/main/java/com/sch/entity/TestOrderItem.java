@@ -2,6 +2,9 @@ package com.sch.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
+
+import com.sch.dto.TestOrderItemDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,75 +29,99 @@ public class TestOrderItem {
 
 	@Column(name = "test_name")
 	private String testName;
+	
 	@Column(name = "test_price")
 	private BigDecimal testPrice;
-	@Column(name="is_completed")
+	
+	@Column(name = "is_completed")
 	private Boolean isCompleted;
 
 	@ManyToOne
 	@JoinColumn(name = "added_by")
 	private User addedBy;
-@Column(name="added_at")
-	private LocalDateTime addedAt;
-public Long getId() {
-	return id;
-}
-public void setId(Long id) {
-	this.id = id;
-}
-public Token getToken() {
-	return token;
-}
-public void setToken(Token token) {
-	this.token = token;
-}
-public String getTestName() {
-	return testName;
-}
-public void setTestName(String testName) {
-	this.testName = testName;
-}
-public BigDecimal getTestPrice() {
-	return testPrice;
-}
-public void setTestPrice(BigDecimal testPrice) {
-	this.testPrice = testPrice;
-}
-public Boolean getIsCompleted() {
-	return isCompleted;
-}
-public void setIsCompleted(Boolean isCompleted) {
-	this.isCompleted = isCompleted;
-}
-public User getAddedBy() {
-	return addedBy;
-}
-public void setAddedBy(User addedBy) {
-	this.addedBy = addedBy;
-}
-public LocalDateTime getAddedAt() {
-	return addedAt;
-}
-public void setAddedAt(LocalDateTime addedAt) {
-	this.addedAt = addedAt;
-}
-public TestOrderItem(Long id, Token token, String testName, BigDecimal testPrice, Boolean isCompleted, User addedBy,
-		LocalDateTime addedAt) {
-	super();
-	this.id = id;
-	this.token = token;
-	this.testName = testName;
-	this.testPrice = testPrice;
-	this.isCompleted = isCompleted;
-	this.addedBy = addedBy;
-	this.addedAt = addedAt;
-}
-public TestOrderItem() {
-	super();
-	// TODO Auto-generated constructor stub
-}
+	
+	@Column(name = "added_at")
+	private Date addedAt;
 
-	// Getters and Setters
+	public Long getId() {
+		return id;
+	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
 
+	public Token getToken() {
+		return token;
+	}
+
+	public void setToken(Token token) {
+		this.token = token;
+	}
+
+	public String getTestName() {
+		return testName;
+	}
+
+	public void setTestName(String testName) {
+		this.testName = testName;
+	}
+
+	public BigDecimal getTestPrice() {
+		return testPrice;
+	}
+
+	public void setTestPrice(BigDecimal testPrice) {
+		this.testPrice = testPrice;
+	}
+
+	public Boolean getIsCompleted() {
+		return isCompleted;
+	}
+
+	public void setIsCompleted(Boolean isCompleted) {
+		this.isCompleted = isCompleted;
+	}
+
+	public User getAddedBy() {
+		return addedBy;
+	}
+
+	public void setAddedBy(User addedBy) {
+		this.addedBy = addedBy;
+	}
+
+	public Date getAddedAt() {
+		return addedAt;
+	}
+
+	public void setAddedAt(Date addedAt) {
+		this.addedAt = addedAt;
+	}
+
+	public TestOrderItem(Long id, Token token, String testName, BigDecimal testPrice, Boolean isCompleted, User addedBy,
+			Date addedAt) {
+		super();
+		this.id = id;
+		this.token = token;
+		this.testName = testName;
+		this.testPrice = testPrice;
+		this.isCompleted = isCompleted;
+		this.addedBy = addedBy;
+		this.addedAt = addedAt;
+	}
+
+	public TestOrderItem() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public TestOrderItemDto convertToDto() {
+		return new TestOrderItemDto(this.id!=null?this.id:null,
+				this.token!=null?this.token.getId():null,
+				this.testName!=null?this.testName:null,
+				this.testPrice!=null?this.testPrice:null,
+				this.isCompleted!=null?this.isCompleted:null,
+				this.addedBy!=null?this.addedBy.getId():null,
+				this.addedAt!=null?this.addedAt:null);
+	}
 }

@@ -90,11 +90,11 @@ public class RegistrationDto {
 	}
 
 
-	public Long getDepartment() {
+	public Long getDepartmentId() {
 		return departmentId;
 	}
 
-	public void setDepartment(Long departmentId) {
+	public void setDepartmentId(Long departmentId) {
 		this.departmentId = departmentId;
 	}
 

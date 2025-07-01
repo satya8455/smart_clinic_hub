@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sch.dto.RegistrationDto;
 import com.sch.dto.Response;
+import com.sch.enums.Role;
 import com.sch.service.UserService;
 import com.sch.service.ValidationService;
 
@@ -34,13 +35,13 @@ public class UserController {
 		return new ResponseEntity<>(validationResponse, HttpStatus.valueOf(validationResponse.getStatusCode()));
 	}
 
-	@PostMapping("/register/client")
+	@PostMapping("/api/register/client")
 	public ResponseEntity<?> registerClient(@RequestBody RegistrationDto registrationDto) {
 		Response<?> response = userService.registerClient(registrationDto);
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
 	}
 
-	@GetMapping("/get/all/admin")
+	@GetMapping("/api/get/all/admin")
 	public ResponseEntity<?> getAllAdmin() {
 		Response<?> response = userService.getAllAdmin();
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
@@ -51,4 +52,24 @@ public class UserController {
 	Response<Object> resetPassword = userService.resetPassword(id, newPassword);
 	return new ResponseEntity<>(resetPassword, HttpStatus.valueOf(resetPassword.getStatusCode()));
 	}
+	
+	@PostMapping("/api/register/staff")
+	public ResponseEntity<?> registerStaff(@RequestBody RegistrationDto registrationDto){
+		Response<?> response=userService.registerStaff(registrationDto);
+		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+	}
+	
+	@GetMapping("/api/filter/user")
+	public ResponseEntity<?> filterUser(@RequestParam Role role,@RequestParam(required = false) Long clinicId) {
+		Response<?> response = userService.filterUser(role,clinicId);
+		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+	}
+	
+	@GetMapping("/update/availability/of/doctor")
+	public ResponseEntity<?> updateAvailabilityOfDoctor(@RequestParam Long doctorId){
+		Response<?> response=userService.mentionAvailabilityOfDoctor(doctorId);
+		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+	}
+	
+	
 }

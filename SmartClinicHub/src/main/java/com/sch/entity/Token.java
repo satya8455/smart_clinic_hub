@@ -43,7 +43,7 @@ public class Token {
 	private Patient patient;
 
 	@Column(name = "token_number")
-	private Integer tokenNumber;
+	private String tokenNumber;
 
 	@Enumerated(EnumType.STRING)
 	private TokenStatus status;
@@ -91,11 +91,11 @@ public class Token {
 		this.patient = patient;
 	}
 
-	public Integer getTokenNumber() {
+	public String getTokenNumber() {
 		return tokenNumber;
 	}
 
-	public void setTokenNumber(Integer tokenNumber) {
+	public void setTokenNumber(String tokenNumber) {
 		this.tokenNumber = tokenNumber;
 	}
 
@@ -115,7 +115,7 @@ public class Token {
 		this.createdAt = createdAt;
 	}
 
-	public Token(Long id, Clinic clinic, Department department, User doctor, Patient patient, Integer tokenNumber,
+	public Token(Long id, Clinic clinic, Department department, User doctor, Patient patient, String tokenNumber,
 			TokenStatus status, Date createdAt) {
 		super();
 		this.id = id;

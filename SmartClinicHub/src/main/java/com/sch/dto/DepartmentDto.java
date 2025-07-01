@@ -15,6 +15,8 @@ public class DepartmentDto {
 	private Long  createdBy;
    
 	private Long  updatedBy;
+	
+	private Boolean isActive;
 
 	public Long getId() {
 		return id;
@@ -64,7 +66,16 @@ public class DepartmentDto {
 		this.updatedBy = updatedBy;
 	}
 
-	public DepartmentDto(Long id, Long clinicId, String name, Date createdAt, Long createdBy, Long updatedBy) {
+	
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public DepartmentDto(Long id, Long clinicId, String name, Date createdAt, Long createdBy, Long updatedBy,Boolean isActive) {
 		super();
 		this.id = id;
 		this.clinicId = clinicId;
@@ -72,6 +83,7 @@ public class DepartmentDto {
 		this.createdAt = createdAt;
 		this.createdBy = createdBy;
 		this.updatedBy = updatedBy;
+		this.isActive=isActive;
 	}
 
 	public DepartmentDto() {

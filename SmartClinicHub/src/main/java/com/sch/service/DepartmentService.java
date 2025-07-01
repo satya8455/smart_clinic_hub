@@ -7,6 +7,8 @@ public interface DepartmentService {
 
 	Response<?> createDepartment(DepartmentDto departmentDto);
 
-	Response<?> getAllDeptByClinicId(Long clinicId);
+	Response<?> deActivateDepartment( Long deptId);
+
+	Response<?> getAllDeptByClinicId();
 
 }
