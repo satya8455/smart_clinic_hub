@@ -1,6 +1,5 @@
 package com.sch.entity;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.sch.dto.ClinicDto;

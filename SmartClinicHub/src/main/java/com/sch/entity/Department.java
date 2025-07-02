@@ -1,10 +1,10 @@
 package com.sch.entity;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.sch.dto.DepartmentDto;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,7 +36,7 @@ public class Department {
 	@ManyToOne
 	@JoinColumn(name = "update_by")
 	private User updatedBy;
-
+@Column(name="is_active")
 	private Boolean isActive;
 	
 	// Getters and Setters

@@ -1,10 +1,10 @@
 package com.sch.entity;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Date;
 
 import com.sch.dto.TokenDto;
+import com.sch.enums.BookingType;
+import com.sch.enums.Session;
 import com.sch.enums.TokenStatus;
 
 import jakarta.persistence.Column;
@@ -48,9 +48,22 @@ public class Token {
 	@Enumerated(EnumType.STRING)
 	private TokenStatus status;
 
+	@Enumerated(EnumType.STRING)
+	private BookingType bookingType;
 	@Column(name = "created_at")
 	private Date createdAt;
+	
+	@Column(name="booking_date")
+	private Date bookingDate;
 
+	@Enumerated(EnumType.STRING)
+	private Session session;
+	@Column(name="check_in_time")
+	private Date checkInTime;
+	
+	@Column(name="is_consulted")
+	private Boolean isConsulted=false;
+	
 	public Long getId() {
 		return id;
 	}
