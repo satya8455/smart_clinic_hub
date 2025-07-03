@@ -2,6 +2,7 @@ package com.sch.serviceImpl;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -123,64 +124,103 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	@Override
 	public Response<?> upgradePlan(SubscriptionPlanDto planDto) {
 		try {
-	    Optional<User> loggedInuser = customizedUserDetailsService.getUserDetails();
-	    if (loggedInuser.isEmpty()) {
-	        return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not logged in", null);
-	    }
+			Optional<User> loggedInuser = customizedUserDetailsService.getUserDetails();
+			if (loggedInuser.isEmpty()) {
+				return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not logged in", null);
+			}
 
-	    Role role = loggedInuser.get().getRole();
-	    if (!(Role.ADMIN.equals(role) || Role.SUPER_ADMIN.equals(role))) {
-	        return new Response<>(HttpStatus.FORBIDDEN.value(), "You can't upgrade the plan", null);
-	    }
+			Role role = loggedInuser.get().getRole();
+			if (!(Role.ADMIN.equals(role) || Role.SUPER_ADMIN.equals(role))) {
+				return new Response<>(HttpStatus.FORBIDDEN.value(), "You can't upgrade the plan", null);
+			}
 
-	    Long clinicId = loggedInuser.get().getClinic().getId();
-	    Optional<Clinic> clinicOpt = clinicRepository.findById(clinicId);
-	    if (clinicOpt.isEmpty()) {
-	        return new Response<>(HttpStatus.NOT_FOUND.value(), "Clinic not found", null);
-	    }
+			Long clinicId = loggedInuser.get().getClinic().getId();
+			Optional<Clinic> clinicOpt = clinicRepository.findById(clinicId);
+			if (clinicOpt.isEmpty()) {
+				return new Response<>(HttpStatus.NOT_FOUND.value(), "Clinic not found", null);
+			}
 
-	    Optional<SubscriptionPlan> planOpt = planRepository.findByName(planDto.getName());
-	    if (planOpt.isEmpty()) {
-	        return new Response<>(HttpStatus.NOT_FOUND.value(), "Plan not found", null);
-	    }
+			Optional<SubscriptionPlan> planOpt = planRepository.findByName(planDto.getName());
+			if (planOpt.isEmpty()) {
+				return new Response<>(HttpStatus.NOT_FOUND.value(), "Plan not found", null);
+			}
 
-	    SubscriptionPlan newPlan = planOpt.get();
+			SubscriptionPlan newPlan = planOpt.get();
 
-	    List<Subscription> subs= subscriptionRepository.findTopByClinicIdOrderByEndDateDesc(clinicId);
-	    if (subs.isEmpty()) {
-	        return new Response<>(HttpStatus.NOT_FOUND.value(), "Active subscription not found", null);
-	    }
+			List<Subscription> subs = subscriptionRepository.findTopByClinicIdOrderByEndDateDesc(clinicId);
+			if (subs.isEmpty()) {
+				return new Response<>(HttpStatus.NOT_FOUND.value(), "Active subscription not found", null);
+			}
 
-	    Subscription subscription = subs.get(0);
-	    subscription.setPlan(newPlan);
-	    subscription.setStartDate(new Date());
-	    subscription.setEndDate(Date.from(LocalDate.now()
-	        .plusDays(newPlan.getDurationDays())
-	        .atStartOfDay(ZoneId.systemDefault()).toInstant()));
-	    subscription.setPaymentStatus("PAID");
-	    subscription.setIsActive(true);
-	    subscription.setReminderSent(false); 
-	    subscriptionRepository.save(subscription);
+			Subscription subscription = subs.get(0);
 
-	    return new Response<>(HttpStatus.OK.value(), "Plan upgraded successfully.", null);
+			LocalDate today = LocalDate.now();
+			LocalDate currentEnd = subscription.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			long remainingDays = 0;
+			if (!currentEnd.isBefore(today)) {
+				remainingDays = ChronoUnit.DAYS.between(today, currentEnd);
+			}
 
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
+			int totalDays = newPlan.getDurationDays() + (int) remainingDays;
+
+			subscription.setPlan(newPlan);
+			subscription.setStartDate(new Date());
+			subscription
+					.setEndDate(Date.from(today.plusDays(totalDays).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			subscription.setPaymentStatus("PAID");
+			subscription.setIsActive(true);
+			subscription.setReminderSent(false);
+			subscriptionRepository.save(subscription);
+
+			return new Response<>(HttpStatus.OK.value(), "Plan upgraded successfully.", null);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Response<>(HttpStatus.BAD_REQUEST.value(), "Something went wrong", null);
+		}
+
 	}
-				
-}
-	
-	@Scheduled(cron = "*/1 * * * * *")
-    public void deactivateExpiredSubscriptions() {
-        Date today = new Date();
-        List<Subscription> expiredList = subscriptionRepository.findByIsActiveTrueAndEndDateBefore(today);
 
-        for (Subscription sub : expiredList) {
-            sub.setIsActive(false);
-            subscriptionRepository.save(sub);
-            System.out.println("⛔ Deactivated expired subscription for clinic: " + sub.getClinic().getName());
-        }
-    }
+	@Scheduled(cron = "*/1 * * * * *")  ///every one second
+	//@Scheduled(cron = "0 0 0 * * *") // everyday ata 12 a.m.
+	public void deactivateExpiredSubscriptions() {
+		Date today = new Date();
+		List<Subscription> expiredList = subscriptionRepository.findByIsActiveTrueAndEndDateBefore(today);
+
+		for (Subscription sub : expiredList) {
+			sub.setIsActive(false);
+			subscriptionRepository.save(sub);
+			System.out.println("⛔ Deactivated expired subscription for clinic: " + sub.getClinic().getName());
+		}
+	}
+
+	@Override
+	public Response<?> getAllPlan() {
+		try {
+			
+			Optional<User> loggedInuser = customizedUserDetailsService.getUserDetails();
+			if (loggedInuser.isEmpty()) {
+				return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not logged in", null);
+			}
+
+			Role role = loggedInuser.get().getRole();
+			if (!(Role.ADMIN.equals(role) || Role.SUPER_ADMIN.equals(role))) {
+				return new Response<>(HttpStatus.FORBIDDEN.value(), "You can't see the plan", null);
+			}
+			
+			List<SubscriptionPlan> allPlans = planRepository.findAll();
+
+			if (allPlans.isEmpty()) {
+				return new Response<>(HttpStatus.BAD_REQUEST.value(), "No plans found", null);
+			}
+			List<SubscriptionPlanDto> allfilterdPlans = allPlans.stream().filter(e -> e != null)
+					.map(SubscriptionPlan::convertToDto).toList();
+			return new Response<>(HttpStatus.OK.value(), "Data retrieved successfully", allfilterdPlans);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Response<>(HttpStatus.BAD_REQUEST.value(), "Something went wrong", null);
+
+		}
+	}
 
 }

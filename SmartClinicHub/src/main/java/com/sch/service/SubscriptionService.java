@@ -8,4 +8,5 @@ public interface SubscriptionService {
 	Response<?> createplan(SubscriptionPlanDto planDto);
 	public boolean isClinicSubscriptionActive(Long clinicId);
 	Response<?> upgradePlan(SubscriptionPlanDto planDto);
+	Response<?> getAllPlan();
 }
