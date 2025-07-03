@@ -7,16 +7,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.sch.config.CustomizedUserDetailsService;
 import com.sch.dto.ClinicDto;
 import com.sch.dto.Response;
 import com.sch.entity.Clinic;
+import com.sch.entity.User;
+import com.sch.enums.Role;
 import com.sch.repository.ClinicRepository;
+import com.sch.repository.UserRepository;
 import com.sch.service.ClinicService;
 
 @Service
 public class ClinicServiceImpl implements ClinicService {
 	@Autowired
 	ClinicRepository clinicRepository;
+
+	@Autowired
+	private CustomizedUserDetailsService customizedUserDetailsService;
+	@Autowired
+	private UserRepository userRepository;
 
 	@Override
 	public Response<?> getClinicById(Long id) {
@@ -35,18 +44,33 @@ public class ClinicServiceImpl implements ClinicService {
 	@Override
 	public Response<?> getAllClinic() {
 		try {
-			List<Clinic> list = clinicRepository.findAll();
-			if(list.isEmpty()) {
-				return new Response<>(HttpStatus.BAD_REQUEST.value(),"No data found",null);
+			Optional<User> loggedInUser = customizedUserDetailsService.getUserDetails();
+			if (loggedInUser.isEmpty() || !loggedInUser.get().getRole().equals(Role.SUPER_ADMIN)) {
+				return new Response<>(HttpStatus.UNAUTHORIZED.value(), "You are not authorized to view clinics", null);
 			}
-			List<ClinicDto> list1 = list.stream().map(Clinic::convertToDTo).toList();
-			
-			return new Response<>(HttpStatus.OK.value(), "Data retrieved successfully", list1);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new Response<>(HttpStatus.BAD_REQUEST.value(), "Something went wrong", null);
 
+			List<Clinic> clinics = clinicRepository.findAll();
+
+			if (clinics.isEmpty()) {
+				return new Response<>(HttpStatus.BAD_REQUEST.value(), "No clinics found", null);
+			}
+
+			List<ClinicDto> clinicDtos = clinics.stream().map(clinic -> {
+				ClinicDto dto = clinic.convertToDTo();
+
+				User admin = userRepository.findByClinicIdAndRole(clinic.getId(), Role.ADMIN);
+				if (admin != null) {
+					dto.setAdmin(admin.convertToDto());
+				}
+
+				return dto;
+			}).toList();
+
+			return new Response<>(HttpStatus.OK.value(), "Clinics retrieved successfully", clinicDtos);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
 		}
 	}
 

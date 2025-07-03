@@ -12,11 +12,21 @@ public class ClinicDto {
 
 	    private String phone;
 
+	    private String email;
 	    private String subdomain;
 
 	    private Long createdBy;
 
 	    private Date createdAt;
+	    private UserDto admin;
+
+	    public UserDto getAdmin() {
+	        return admin;
+	    }
+
+	    public void setAdmin(UserDto admin) {
+	        this.admin = admin;
+	    }
 
 		public Long getId() {
 			return id;
@@ -74,13 +84,25 @@ public class ClinicDto {
 			this.createdAt = createdAt;
 		}
 
-		public ClinicDto(Long id, String name, String address, String phone, String subdomain, Long createdBy,
-				Date createdAt) {
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
+	
+	
+
+		public ClinicDto(Long id, String name, String address, String phone, String email, String subdomain,
+				Long createdBy, Date createdAt) {
 			super();
 			this.id = id;
 			this.name = name;
 			this.address = address;
 			this.phone = phone;
+			this.email = email;
 			this.subdomain = subdomain;
 			this.createdBy = createdBy;
 			this.createdAt = createdAt;

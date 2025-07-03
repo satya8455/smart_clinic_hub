@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
 	Optional<User> findByIdAndClinic(Long doctorId, Clinic clinic);
 
-	List<User> findAllById(Long clinicId);
+	User findByClinicIdAndRole(Long id, Role admin);
 
 //	void findByDoctorIdAndDepartmentId(Long doctorId, Long departmentId);
 
