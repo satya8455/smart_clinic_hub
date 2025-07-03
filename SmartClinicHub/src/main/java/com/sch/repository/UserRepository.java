@@ -22,6 +22,8 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
 	Optional<User> findByIdAndClinic(Long doctorId, Clinic clinic);
 
+	List<User> findAllById(Long clinicId);
+
 //	void findByDoctorIdAndDepartmentId(Long doctorId, Long departmentId);
 
 }

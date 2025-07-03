@@ -10,8 +10,10 @@ public interface UserService {
 	Response<?> registerSuperadmin(RegistrationDto registrationDto);
 
 	Response<?> registerClient(RegistrationDto registrationDto);
+
 	Response<Object> generateToken(LoginRequest loginRequest);
-	Response<Object>resetPassword(Long id,String newPassword);
+
+	Response<Object> resetPassword(Long id, String newPassword);
 
 	Response<?> getAllAdmin();
 
@@ -20,5 +22,9 @@ public interface UserService {
 	Response<?> filterUser(Role role, Long clinicId);
 
 	Response<?> mentionAvailabilityOfDoctor(Long doctorId);
+
+	Response<?> getAllDoctor();
+	
+	Response<?> getDoctorById(Long id);
 
 }

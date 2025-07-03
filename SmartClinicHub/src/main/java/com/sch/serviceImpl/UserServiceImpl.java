@@ -290,7 +290,7 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Something went wrong",null);
+			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
 		}
 	}
 
@@ -323,7 +323,7 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Something went wrong",null);
+			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
 		}
 	}
 
@@ -339,7 +339,7 @@ public class UserServiceImpl implements UserService {
 					return new Response<>(HttpStatus.BAD_REQUEST.value(), "User not found", null);
 				}
 				User user = optionalUser.get();
-				LocalTime currentTime=LocalTime.of(9, 0);
+				LocalTime currentTime = LocalTime.of(9, 0);
 				user.setAvailableFrom(currentTime);
 				user.setAvailableTo(currentTime.plusHours(3));
 				userRepository.save(user);
@@ -349,9 +349,54 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(),"Something went wrong",null);
+			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
 		}
 	}
 
+	@Override
+	public Response<?> getAllDoctor() {
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("SUPER_ADMIN"))) {
+
+				List<User> listOfDoctors = userRepository.findAll();
+				if (listOfDoctors.isEmpty()) {
+					return new Response<>(HttpStatus.BAD_REQUEST.value(), "Data not found", null);
+				}
+				List<UserDto> doctors = listOfDoctors.stream().filter(r -> r.getRole().equals(Role.DOCTOR))
+						.map(User::convertToDto).toList();
+				return new Response<>(HttpStatus.OK.value(), "Success", doctors);
+			}
+			return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not authorized", null);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
+		}
+	}
+
+	@Override
+	public Response<?> getDoctorById(Long id) {
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("RECEPTIONIST"))) {
+
+				Optional<User> doctors = userRepository.findById(id);
+				if (doctors.isEmpty()) {
+					return new Response<>(HttpStatus.BAD_REQUEST.value(), "Users not found", null);
+				}
+				User doctorUser = doctors.get();
+				if (doctorUser.getRole().equals(Role.DOCTOR)) {
+					return new Response<>(HttpStatus.OK.value(), "Success", doctorUser);
+				}
+				return new Response<>(HttpStatus.BAD_REQUEST.value(), "Doctor not found", null);
+			}
+			return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not authorized", null);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
+		}
+	}
 
 }

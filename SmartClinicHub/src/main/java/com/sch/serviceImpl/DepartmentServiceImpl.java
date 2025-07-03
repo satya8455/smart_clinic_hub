@@ -130,7 +130,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
-
 		}
 	}
 

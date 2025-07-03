@@ -65,8 +65,6 @@ public class TokenServiceImpl implements TokenService {
 							doctor.getRole().equals(Role.ADMIN)||doctor.getRole().equals(Role.RECEPTIONIST)) {
 						return new Response<>(HttpStatus.BAD_REQUEST.value(),"Doctor not found",null);
 					}
-					System.out.println(doctor.getName());
-					System.out.println(user.getClinic().getId());
 					token.setDoctor(doctor);
 					Optional<Patient> optionalPatient = patientRepository.findById(tokenDto.getPatientId());
 					if(optionalPatient.isEmpty()) {

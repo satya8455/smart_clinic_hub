@@ -71,5 +71,17 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
 	}
 	
+	@GetMapping("/api/get/all/doctor")
+	public ResponseEntity<?> getAllDoctor(){
+		Response<?> response=userService.getAllDoctor();
+		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+	}
+	
+	@GetMapping("/api/get/doctor/by/id")
+	public ResponseEntity<?> getDoctorById(@RequestParam Long id){
+		Response<?> response=userService.getDoctorById(id);
+		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+	}
+	
 	
 }
