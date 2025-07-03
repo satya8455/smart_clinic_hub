@@ -3,6 +3,7 @@ package com.sch.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,14 +21,20 @@ public class SubscriptionPlanController {
 	public ResponseEntity<?> createPlan(@RequestBody SubscriptionPlanDto planDto){
 		Response<?> response=subscriptionService.createplan(planDto);
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
-}
+	}
 	
 	
 	@PostMapping("/api/upgrade/plan")
 	public ResponseEntity<?> upgradePlan(@RequestBody SubscriptionPlanDto planDto){
 		Response<?> response=subscriptionService.upgradePlan(planDto);
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
-}
+	}
+	
+	@GetMapping("/api/get/all/plan")
+	public ResponseEntity<?> getAllPlan(){
+		Response<?> response=subscriptionService.getAllPlan();
+		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+	}
 	
 	
 }

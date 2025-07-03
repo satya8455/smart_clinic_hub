@@ -19,6 +19,7 @@ import com.sch.repository.ClinicRepository;
 import com.sch.repository.DepartmentRepository;
 import com.sch.repository.UserRepository;
 import com.sch.service.DepartmentService;
+import com.sch.service.SubscriptionService;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
@@ -29,6 +30,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Autowired
 	ClinicRepository clinicRepository;
 
+	@Autowired
+	private SubscriptionService subscriptionService;
 	@Autowired
 	private CustomizedUserDetailsService customizedUserDetailsService;
 
@@ -45,6 +48,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 				}
 
 				User loggedInUser = optionalUser.get();
+				
+				Long clinicId = loggedInUser.getClinic().getId();
+
+				if (!subscriptionService.isClinicSubscriptionActive(clinicId)) {
+					return new Response<>(HttpStatus.BAD_REQUEST.value(),"Subscription expired",null);
+				}
 				Optional<Department> optionalDept = departmentRepository
 						.findByNameIgnoreCaseAndClinic(departmentDto.getName(), loggedInUser.getClinic());
 				Department department;

@@ -34,15 +34,20 @@ public class ClinicServiceImpl implements ClinicService {
 
 	@Override
 	public Response<?> getAllClinic() {
-		List<Clinic> list = clinicRepository.findAll();
-		if(list.isEmpty()) {
-			return new Response<>(HttpStatus.BAD_REQUEST.value(),"No data found",null);
+		try {
+			List<Clinic> list = clinicRepository.findAll();
+			if(list.isEmpty()) {
+				return new Response<>(HttpStatus.BAD_REQUEST.value(),"No data found",null);
+			}
+			List<ClinicDto> list1 = list.stream().map(Clinic::convertToDTo).toList();
+			
+			return new Response<>(HttpStatus.OK.value(), "Data retrieved successfully", list1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new Response<>(HttpStatus.BAD_REQUEST.value(), "Something went wrong", null);
+
 		}
-		List<ClinicDto> list1 = list.stream().map(Clinic::convertToDTo).toList();
-		if (list.isEmpty()) {
-			return new Response<>(HttpStatus.OK.value(), "Data not found", null);
-		}
-		return new Response<>(HttpStatus.OK.value(), "Data retrieved successfully", list1);
 	}
 
 }
