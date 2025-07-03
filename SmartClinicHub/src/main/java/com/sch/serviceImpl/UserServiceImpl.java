@@ -102,6 +102,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Response<?> registerClient(RegistrationDto registrationDto) {
 		try {
+			
+			if(registrationDto==null) {
+				return new Response<>(HttpStatus.BAD_REQUEST.value(),"Data can't be null",null);
+			}
 			Optional<User> loggedUserOptional = customizedUserDetailsService.getUserDetails();
 
 			if (loggedUserOptional.isEmpty() || !loggedUserOptional.get().getRole().equals(Role.SUPER_ADMIN)) {
@@ -133,7 +137,7 @@ public class UserServiceImpl implements UserService {
 				admin.setName(registrationDto.getName());
 				admin.setEmail(registrationDto.getEmail());
 				admin.setPhone(registrationDto.getPhone());
-				admin.setPassword(passwordEncoder.encode("Rst@123"));
+				admin.setPassword(registrationDto.getPassword()!=null?registrationDto.getPassword():passwordEncoder.encode("Rst@123"));
 				admin.setRole(Role.ADMIN);
 				admin.setClinic(savedClinic);
 				admin.setIsActive(true);
@@ -184,7 +188,7 @@ public class UserServiceImpl implements UserService {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace(); // Or use log.error(...)
+			e.printStackTrace(); 
 			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong.", null);
 		}
 	}

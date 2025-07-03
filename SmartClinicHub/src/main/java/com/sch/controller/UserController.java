@@ -17,6 +17,8 @@ import com.sch.enums.Role;
 import com.sch.service.UserService;
 import com.sch.service.ValidationService;
 
+import jakarta.validation.Valid;
+
 @RestController
 public class UserController {
 	@Autowired

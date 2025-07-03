@@ -134,6 +134,7 @@ public class Clinic {
 			this.name!=null?this.name:null,
 			this.address!=null?this.address:null,
 			this.phone!=null?this.phone:null,
+					this.email!=null?this.email:null,
 			this.subdomain!=null?this.subdomain:null,
 			this.createdBy!=null?this.createdBy.getId():null,
 			this.createdAt!=null?this.createdAt:null);

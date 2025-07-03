@@ -20,7 +20,7 @@ public class ClinicController {
 		Response<?> response= clinicService.getClinicById(id);
 		return new ResponseEntity<>(response,HttpStatus.valueOf(response.getStatusCode()));
 	}
-	@GetMapping("/get/all")
+	@GetMapping("/api/get/all")
 	public ResponseEntity<?> getAllClinic(){
 		Response<?> response= clinicService.getAllClinic();
 		return new ResponseEntity<>(response,HttpStatus.valueOf(response.getStatusCode()));
