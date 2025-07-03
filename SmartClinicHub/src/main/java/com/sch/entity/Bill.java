@@ -1,7 +1,6 @@
 package com.sch.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.sch.dto.BillDto;
@@ -44,6 +43,15 @@ public class Bill {
 	
 	@Column(name = "created_at")
 	private Date createdAt;
+	
+	@Column(name="payment_date")
+	private Date paymentDate;
+	@Column(name="discount_amount")
+	private Long discountAmount;
+	@Column(name="coupon_code")
+	private String couponCode;
+	
+	
 	
 	public Long getId() {
 		return id;

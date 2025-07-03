@@ -1,7 +1,6 @@
 package com.sch.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.sch.dto.TestOrderItemDto;

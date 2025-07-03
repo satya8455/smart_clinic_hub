@@ -1,10 +1,14 @@
 package com.sch.serviceImpl;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -62,4 +66,48 @@ public class EmailServiceImpl implements EmailService {
 		emailThread.setPriority(Thread.NORM_PRIORITY); 
 		emailThread.start(); 
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+    public void sendReminder(String toEmail, Date expiryDate) {
+        String subject = "⚠️ Clinic Subscription Expiry Reminder";
+
+        String formattedDate = new SimpleDateFormat("dd-MM-yyyy").format(expiryDate);
+
+        String message = """
+                Dear Clinic Admin,
+
+                This is a reminder that your clinic's subscription is expiring on %s.
+
+                Please renew it before expiry to avoid service interruption.
+
+                Regards,
+                Clinic SaaS Team
+                """.formatted(formattedDate);
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(toEmail);
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+
+        javaMailService.send(mailMessage);
+    }
 }

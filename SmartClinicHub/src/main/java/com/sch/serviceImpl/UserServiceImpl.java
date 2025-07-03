@@ -1,7 +1,9 @@
 
 package com.sch.serviceImpl;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,10 +25,15 @@ import com.sch.dto.Response;
 import com.sch.dto.UserDto;
 import com.sch.entity.Clinic;
 import com.sch.entity.Department;
+import com.sch.entity.Subscription;
+import com.sch.entity.SubscriptionPlan;
 import com.sch.entity.User;
+import com.sch.enums.PlanType;
 import com.sch.enums.Role;
 import com.sch.repository.ClinicRepository;
 import com.sch.repository.DepartmentRepository;
+import com.sch.repository.SubscriptionPlanRepository;
+import com.sch.repository.SubscriptionRepository;
 import com.sch.repository.UserRepository;
 import com.sch.service.EmailService;
 import com.sch.service.UserService;
@@ -51,6 +58,11 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	DepartmentRepository departmentRepository;
+	
+	@Autowired
+	private SubscriptionPlanRepository planRepository;
+	@Autowired
+	private SubscriptionRepository subscriptionRepository;
 
 	@Override
 	public Response<?> registerSuperadmin(RegistrationDto registrationDto) {
@@ -128,6 +140,22 @@ public class UserServiceImpl implements UserService {
 				admin.setCreatedAt(new Date());
 				admin.setCreatedBy(loggedUser);
 				User savedAdmin = userRepository.save(admin);
+				
+				
+				Optional<SubscriptionPlan> trialPlan = planRepository.findByName(PlanType.TRIAL);
+				if(!trialPlan.isPresent()) {
+					return new Response<>(HttpStatus.OK.value(),"Trial plan not found",null);
+				}
+				Subscription subscription = new Subscription();
+				subscription.setClinic(savedClinic); 
+				subscription.setPlan(trialPlan.get());
+				subscription.setStartDate(new Date());
+				subscription.setEndDate(Date.from(LocalDate.now().plusDays(trialPlan.get().getDurationDays()).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+				subscription.setIsActive(true);
+				subscription.setPaymentStatus("FREE");
+				subscription.setReminderSent(false);
+
+				subscriptionRepository.save(subscription);
 				emailService.sendPasswordResetEmail(savedAdmin);
 
 				return new Response<>(HttpStatus.OK.value(), "Clinic and Admin registered successfully.", null);

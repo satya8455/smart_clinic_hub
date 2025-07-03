@@ -2,7 +2,8 @@ package com.sch.enums;
 
 public enum TokenStatus {
     WAITING,
-    CALLED,
+    CHECKED_IN,
+    COMPLETED,
     SKIPPED,
-    DONE
+    CANCELLED
 }
