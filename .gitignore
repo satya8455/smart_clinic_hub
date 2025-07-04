@@ -8,3 +8,4 @@ SmartClinicHub/.mvn/wrapper/maven-wrapper.properties
 .metadata/.plugins/org.eclipse.core.resources/.projects/.org.eclipse.egit.core.cmp/.location
 .metadata/.plugins/org.eclipse.core.resources/.root/1.tree
 *.resources
+.metadata/.plugins/org.eclipse.core.resources/.root/.indexes/properties.index

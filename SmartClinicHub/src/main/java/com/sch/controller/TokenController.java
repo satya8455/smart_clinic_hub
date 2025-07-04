@@ -50,7 +50,7 @@ public class TokenController {
 	@GetMapping("/next")
 	public ResponseEntity<?> getNext(){
 		Token nextToken = tokenService.startNextToken();
-		return nextToken == null ? new ResponseEntity<>(nextToken, HttpStatus.OK)
+		return nextToken != null ? new ResponseEntity<>(nextToken, HttpStatus.OK)
 				: new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
 
 	}
