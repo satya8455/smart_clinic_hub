@@ -32,7 +32,10 @@ public class User {
 	private String phone;
 
 	private String password;
-
+	@Column(name = "user_logo_url")
+	private String logoUrl;
+	
+	private String gender;
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
@@ -200,6 +203,48 @@ public class User {
 	}
 
 	public void setYearsOfExperience(Long yearsOfExperience) {
+		this.yearsOfExperience = yearsOfExperience;
+	}
+
+	
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getLogoUrl() {
+		return logoUrl;
+	}
+
+	public void setLogoUrl(String logoUrl) {
+		this.logoUrl = logoUrl;
+	}
+
+	public User(Long id, String name, String email, String phone, String password, String gender, Role role,
+			Clinic clinic, Department department, Boolean isActive, LocalTime availableFrom, LocalTime availableTo,
+			Date createdAt, User createdBy, User updatedBy, Date updatedAt, String qualification,
+			Long yearsOfExperience) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.phone = phone;
+		this.password = password;
+		this.gender = gender;
+		this.role = role;
+		this.clinic = clinic;
+		this.department = department;
+		this.isActive = isActive;
+		this.availableFrom = availableFrom;
+		this.availableTo = availableTo;
+		this.createdAt = createdAt;
+		this.createdBy = createdBy;
+		this.updatedBy = updatedBy;
+		this.updatedAt = updatedAt;
+		this.qualification = qualification;
 		this.yearsOfExperience = yearsOfExperience;
 	}
 

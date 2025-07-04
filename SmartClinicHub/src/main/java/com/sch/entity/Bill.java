@@ -39,7 +39,7 @@ public class Bill {
 	private Boolean paid;
 
 	@Enumerated(EnumType.STRING)
-	private PaymentMode paymentMode = PaymentMode.PENDING;
+	private PaymentMode paymentMode;
 	
 	@Column(name = "created_at")
 	private Date createdAt;

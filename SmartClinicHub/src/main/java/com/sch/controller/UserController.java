@@ -1,23 +1,20 @@
 package com.sch.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sch.dto.DoctorDto;
 import com.sch.dto.RegistrationDto;
 import com.sch.dto.Response;
 import com.sch.enums.Role;
 import com.sch.service.UserService;
 import com.sch.service.ValidationService;
-
-import jakarta.validation.Valid;
 
 @RestController
 public class UserController {
@@ -60,7 +57,7 @@ public class UserController {
 	}
 
 	@PostMapping("/api/register/staff")
-	public ResponseEntity<?> registerStaff(@RequestBody RegistrationDto registrationDto) {
+	public ResponseEntity<?> registerStaff(@RequestBody DoctorDto registrationDto) {
 		Response<?> response = userService.registerStaff(registrationDto);
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
 	}

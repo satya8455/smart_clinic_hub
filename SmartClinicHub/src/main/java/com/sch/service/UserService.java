@@ -1,5 +1,6 @@
 package com.sch.service;
 
+import com.sch.dto.DoctorDto;
 import com.sch.dto.LoginRequest;
 import com.sch.dto.RegistrationDto;
 import com.sch.dto.Response;
@@ -17,7 +18,7 @@ public interface UserService {
 
 	Response<?> getAllAdmin();
 
-	Response<?> registerStaff(RegistrationDto registrationDto);
+	Response<?> registerStaff(DoctorDto registrationDto);
 
 	Response<?> filterUser(Role role, Long clinicId);
 

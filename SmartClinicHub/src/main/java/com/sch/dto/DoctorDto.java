@@ -17,6 +17,8 @@ public class DoctorDto  extends RegistrationDto{
     private String qualification;
     
     private Long departmentId;
+    
+    private Long yearsOfExperience;
 
 	public String getProfilePic() {
 		return profilePic;
@@ -56,6 +58,14 @@ public class DoctorDto  extends RegistrationDto{
 
 	public void setDepartmentId(Long departmentId) {
 		this.departmentId = departmentId;
+	}
+
+	public Long getYearsOfExperience() {
+		return yearsOfExperience;
+	}
+
+	public void setYearsOfExperience(Long yearsOfExperience) {
+		this.yearsOfExperience = yearsOfExperience;
 	}
 
 	public DoctorDto(Long id, String name, String email, String phone, String password, Role role, Long clinicId,

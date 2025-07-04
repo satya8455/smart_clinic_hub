@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties.Http;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,6 +57,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 				}
 				Optional<Department> optionalDept = departmentRepository
 						.findByNameIgnoreCaseAndClinic(departmentDto.getName(), loggedInUser.getClinic());
+				if(optionalDept.isPresent()) {
+					return new Response<>(HttpStatus.BAD_REQUEST.value(),"Department exits already",null);
+				}
 				Department department;
 				if (optionalDept.isEmpty()) {
 					department = new Department();

@@ -32,13 +32,13 @@ public class Department {
 	@ManyToOne
 	@JoinColumn(name = "create_by")
 	private User createdBy;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "update_by")
 	private User updatedBy;
-@Column(name="is_active")
+	@Column(name = "is_active")
 	private Boolean isActive;
-	
+
 	// Getters and Setters
 	public Long getId() {
 		return id;
@@ -88,7 +88,6 @@ public class Department {
 		this.updatedBy = updatedBy;
 	}
 
-	
 	public Boolean getIsActive() {
 		return isActive;
 	}
@@ -97,7 +96,8 @@ public class Department {
 		this.isActive = isActive;
 	}
 
-	public Department(Long id, Clinic clinic, String name, Date createdAt, User createdBy, User updatedBy,Boolean isActive) {
+	public Department(Long id, Clinic clinic, String name, Date createdAt, User createdBy, User updatedBy,
+			Boolean isActive) {
 		super();
 		this.id = id;
 		this.clinic = clinic;
@@ -105,7 +105,7 @@ public class Department {
 		this.createdAt = createdAt;
 		this.createdBy = createdBy;
 		this.updatedBy = updatedBy;
-		this.isActive=isActive;
+		this.isActive = isActive;
 	}
 
 	public Department() {
@@ -117,7 +117,6 @@ public class Department {
 		return new DepartmentDto(this.id != null ? this.id : null, this.clinic != null ? this.clinic.getId() : null,
 				this.name != null ? this.name : null, this.createdAt != null ? this.createdAt : null,
 				this.createdBy != null ? this.createdBy.getId() : null,
-				this.updatedBy != null ? this.updatedBy.getId() : null,
-				this.isActive!=null?this.isActive:null);
+				this.updatedBy != null ? this.updatedBy.getId() : null, this.isActive != null ? this.isActive : null);
 	}
 }

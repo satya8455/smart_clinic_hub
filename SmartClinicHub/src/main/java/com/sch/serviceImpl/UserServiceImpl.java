@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sch.config.CustomizedUserDetailsService;
+import com.sch.dto.DoctorDto;
 import com.sch.dto.LoginRequest;
 import com.sch.dto.LoginResponseDto;
 import com.sch.dto.RegistrationDto;
@@ -36,6 +37,7 @@ import com.sch.repository.SubscriptionPlanRepository;
 import com.sch.repository.SubscriptionRepository;
 import com.sch.repository.UserRepository;
 import com.sch.service.EmailService;
+import com.sch.service.SubscriptionService;
 import com.sch.service.UserService;
 
 @Service
@@ -58,11 +60,13 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	DepartmentRepository departmentRepository;
-	
+
 	@Autowired
 	private SubscriptionPlanRepository planRepository;
 	@Autowired
 	private SubscriptionRepository subscriptionRepository;
+	@Autowired
+	private SubscriptionService subscriptionService;
 
 	@Override
 	public Response<?> registerSuperadmin(RegistrationDto registrationDto) {
@@ -102,9 +106,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Response<?> registerClient(RegistrationDto registrationDto) {
 		try {
-			
-			if(registrationDto==null) {
-				return new Response<>(HttpStatus.BAD_REQUEST.value(),"Data can't be null",null);
+
+			if (registrationDto == null) {
+				return new Response<>(HttpStatus.BAD_REQUEST.value(), "Data can't be null", null);
 			}
 			Optional<User> loggedUserOptional = customizedUserDetailsService.getUserDetails();
 
@@ -137,24 +141,25 @@ public class UserServiceImpl implements UserService {
 				admin.setName(registrationDto.getName());
 				admin.setEmail(registrationDto.getEmail());
 				admin.setPhone(registrationDto.getPhone());
-				admin.setPassword(registrationDto.getPassword()!=null?registrationDto.getPassword():passwordEncoder.encode("Rst@123"));
+				admin.setPassword(registrationDto.getPassword() != null ? registrationDto.getPassword()
+						: passwordEncoder.encode("Rst@123"));
 				admin.setRole(Role.ADMIN);
 				admin.setClinic(savedClinic);
 				admin.setIsActive(true);
 				admin.setCreatedAt(new Date());
 				admin.setCreatedBy(loggedUser);
 				User savedAdmin = userRepository.save(admin);
-				
-				
+
 				Optional<SubscriptionPlan> trialPlan = planRepository.findByName(PlanType.TRIAL);
-				if(!trialPlan.isPresent()) {
-					return new Response<>(HttpStatus.OK.value(),"Trial plan not found",null);
+				if (!trialPlan.isPresent()) {
+					return new Response<>(HttpStatus.OK.value(), "Trial plan not found", null);
 				}
 				Subscription subscription = new Subscription();
-				subscription.setClinic(savedClinic); 
+				subscription.setClinic(savedClinic);
 				subscription.setPlan(trialPlan.get());
 				subscription.setStartDate(new Date());
-				subscription.setEndDate(Date.from(LocalDate.now().plusDays(trialPlan.get().getDurationDays()).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+				subscription.setEndDate(Date.from(LocalDate.now().plusDays(trialPlan.get().getDurationDays())
+						.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				subscription.setIsActive(true);
 				subscription.setPaymentStatus("FREE");
 				subscription.setReminderSent(false);
@@ -188,7 +193,7 @@ public class UserServiceImpl implements UserService {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace(); 
+			e.printStackTrace();
 			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong.", null);
 		}
 	}
@@ -278,53 +283,99 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Response<?> registerStaff(RegistrationDto registrationDto) {
-		try {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	public Response<?> registerStaff(DoctorDto registrationDto) {try {
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String loggedInEmail = authentication.getName();
 
-			if (authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ADMIN"))) {
+	    Optional<User> optionalUser = userRepository.findByEmail(loggedInEmail);
+	    if (optionalUser.isEmpty()) {
+	        return new Response<>(HttpStatus.UNAUTHORIZED.value(), "User not found", null);
+	    }
 
-				if (registrationDto.getId() == null) {
-					User user = new User();
-					user.setName(registrationDto.getName());
-					user.setEmail(registrationDto.getEmail());
-					user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
-					user.setPhone(registrationDto.getPhone());
+	    User loggedInUser = optionalUser.get();
+	    Role currentUserRole = loggedInUser.getRole();
+	    Role targetRole = registrationDto.getRole();
 
-					Optional<User> optionalUser = userRepository.findByEmail(authentication.getName());
-					if (optionalUser.isEmpty()) {
-						return new Response<>(HttpStatus.BAD_REQUEST.value(), "User admin not found", null);
-					}
+	    boolean isAdmin = currentUserRole.equals(Role.ADMIN);
+	    boolean isReceptionistCreatingDoctor = currentUserRole.equals(Role.RECEPTIONIST) && targetRole.equals(Role.DOCTOR);
 
-					user.setRole(registrationDto.getRole());
-					user.setCreatedBy(optionalUser.get());
-					user.setCreatedAt(new Date());
-					user.setIsActive(true);
-					if (optionalUser.get().getClinic() == null) {
-						return new Response<>(HttpStatus.BAD_REQUEST.value(), "Clinic not found", null);
-					}
-					Clinic clinic = optionalUser.get().getClinic();
-					user.setClinic(clinic);
-					if (registrationDto.getRole().equals(Role.DOCTOR)) {
-						Optional<Department> optionalDept = departmentRepository
-								.findByIdAndClinic(registrationDto.getDepartmentId(), clinic);
-						if (optionalDept.isEmpty()) {
-							return new Response<>(HttpStatus.BAD_REQUEST.value(), "Department doesn't exists", null);
-						}
-						user.setDepartment(optionalDept.get());
-					}
+	    if (!isAdmin && !isReceptionistCreatingDoctor) {
+	        return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not authorized", null);
+	    }
 
-					userRepository.save(user);
-					return new Response<>(HttpStatus.OK.value(), "Registration successful", null);
-				}
-			}
-			return new Response<>(HttpStatus.UNAUTHORIZED.value(), "Not authorized", null);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
-		}
+	    Long clinicId = loggedInUser.getClinic().getId();
+	    if (!subscriptionService.isClinicSubscriptionActive(clinicId)) {
+	        return new Response<>(HttpStatus.BAD_REQUEST.value(), "Subscription expired", null);
+	    }
+
+	    User user;
+
+	    // === Update Logic ===
+	    if (registrationDto.getId() != null) {
+	        Optional<User> optionalExistingUser = userRepository.findById(registrationDto.getId());
+	        if (optionalExistingUser.isEmpty()) {
+	            return new Response<>(HttpStatus.NOT_FOUND.value(), "User not found", null);
+	        }
+
+	        user = optionalExistingUser.get();
+
+	        if (registrationDto.getName() != null) user.setName(registrationDto.getName());
+	        if (registrationDto.getEmail() != null) user.setEmail(registrationDto.getEmail());
+	        if (registrationDto.getPassword() != null && !registrationDto.getPassword().isBlank())
+	            user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+	        if (registrationDto.getPhone() != null) user.setPhone(registrationDto.getPhone());
+	        if (registrationDto.getQualification() != null) user.setQualification(registrationDto.getQualification());
+	        if (registrationDto.getYearsOfExperience() != null) user.setYearsOfExperience(registrationDto.getYearsOfExperience());
+	        if (registrationDto.getGender() != null) user.setGender(registrationDto.getGender());
+	        if (registrationDto.getProfilePic() != null) user.setLogoUrl(registrationDto.getProfilePic());
+
+	        user.setIsActive(true);
+	        user.setUpdatedAt(new Date());
+
+	    } else {
+	        // === Create Logic ===
+	        Optional<User> existingUser = userRepository.findByEmail(registrationDto.getEmail());
+	        if (existingUser.isPresent()) {
+	            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Email already exists", null);
+	        }
+
+	        user = new User();
+	        user.setName(registrationDto.getName());
+	        user.setEmail(registrationDto.getEmail());
+	        user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+	        user.setPhone(registrationDto.getPhone());
+	        user.setRole(registrationDto.getRole());
+	        user.setQualification(registrationDto.getQualification());
+	        user.setYearsOfExperience(registrationDto.getYearsOfExperience());
+	        user.setGender(registrationDto.getGender());
+	        user.setLogoUrl(registrationDto.getProfilePic());
+	        user.setCreatedBy(loggedInUser);
+	        user.setCreatedAt(new Date());
+	        user.setIsActive(true);
+	        user.setClinic(loggedInUser.getClinic());
+	    }
+
+	    // === Set Department if Role is Doctor ===
+	    if (registrationDto.getRole().equals(Role.DOCTOR)) {
+	        Optional<Department> optionalDept = departmentRepository
+	                .findByIdAndClinic(registrationDto.getDepartmentId(), loggedInUser.getClinic());
+
+	        if (optionalDept.isEmpty()) {
+	            return new Response<>(HttpStatus.BAD_REQUEST.value(), "Department doesn't exist", null);
+	        }
+
+	        user.setDepartment(optionalDept.get());
+	    }
+
+	    userRepository.save(user);
+	    String message = (registrationDto.getId() != null) ? "User updated successfully" : "Registration successful";
+	    return new Response<>(HttpStatus.OK.value(), message, null);
+
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    return new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Something went wrong", null);
 	}
+}
 
 	@Override
 	public Response<?> filterUser(Role role, Long clinicId) {
