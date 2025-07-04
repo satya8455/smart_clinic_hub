@@ -25,20 +25,32 @@ public class Token {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "clinic_id")
+	@JoinColumn(name = "clinic_id",insertable = false,updatable = false)
 	private Clinic clinic;
-
+	
+	@Column(name = "clinic_id")
+	private Long clinicId;
+	
 	@ManyToOne
-	@JoinColumn(name = "department_id")
+	@JoinColumn(name = "department_id", insertable = false,updatable = false)
 	private Department department;
+	
+	@Column(name = "department_id")
+	private Long department_id;
+	
 
 	@ManyToOne
 	@JoinColumn(name = "doctor_id")
 	private User doctor;
 
 	@ManyToOne
-	@JoinColumn(name = "patient_id")
+	@JoinColumn(name = "patient_id",insertable = false,updatable = false)
 	private Patient patient;
+	
+	@Column(name="patient_id")
+	private Long patientId;
+	
+	
 
 	@Column(name = "token_number")
 	private Integer tokenNumber;
@@ -121,6 +133,21 @@ public class Token {
 		this.department = department;
 		this.doctor = doctor;
 		this.patient = patient;
+		this.tokenNumber = tokenNumber;
+		this.status = status;
+		this.createdAt = createdAt;
+	}
+	
+	
+
+	public Token(Long id, Long clinicId, Long department_id, User doctor, Long patientId, Integer tokenNumber,
+			TokenStatus status, LocalDateTime createdAt) {
+		super();
+		this.id = id;
+		this.clinicId = clinicId;
+		this.department_id = department_id;
+		this.doctor = doctor;
+		this.patientId = patientId;
 		this.tokenNumber = tokenNumber;
 		this.status = status;
 		this.createdAt = createdAt;

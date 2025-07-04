@@ -1,10 +1,14 @@
 package com.sch.serviceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.sch.dto.RegistrationDto;
 import com.sch.dto.Response;
+import com.sch.dto.TokenDto;
 import com.sch.service.ValidationService;
 @Service
 public class ValidationServiceImpl implements ValidationService{
@@ -27,5 +31,23 @@ public class ValidationServiceImpl implements ValidationService{
 			return new Response<>(HttpStatus.BAD_REQUEST.value(),"Provide phone number",null);
 		}
 		return new Response<>(HttpStatus.OK.value(), "Success.", null);
+	}
+
+	@Override
+	public Response<?> validateToken(TokenDto dto) {
+		List<String> errors = new ArrayList<>();
+		if(dto == null) {
+			errors.add("Token can't be Null");
+		}
+		if(dto.getClinicId() == null && dto.getClinicId() <0) {
+			errors.add("Invalid Clinic id ");
+		}
+		if(dto.getPatientId() == null && dto.getPatientId() <0) {
+			errors.add("Invalid patient Id");
+		}
+		if(errors.isEmpty()) {
+			return new Response<>(HttpStatus.OK.value(), "Verified", null);
+		}
+		return new Response<>(HttpStatus.OK.value(), "Invalid Request", errors);
 	}
 }
