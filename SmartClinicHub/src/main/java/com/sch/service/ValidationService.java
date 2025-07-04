@@ -16,4 +16,6 @@ public interface ValidationService {
 
 	Response<?> validateTokenCreationPayload(TokenDto tokenDto);
 
+	Response<?> validateClientRegisterPayload(RegistrationDto registrationDto);
+
 }
