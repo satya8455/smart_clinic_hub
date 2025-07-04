@@ -39,8 +39,12 @@ public class UserController {
 
 	@PostMapping("/api/register/client")
 	public ResponseEntity<?> registerClient(@RequestBody RegistrationDto registrationDto) {
-		Response<?> response = userService.registerClient(registrationDto);
-		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+		Response<?> validationResponse = validationService.validateClientRegisterPayload(registrationDto);
+		if (validationResponse.getStatusCode() == HttpStatus.OK.value()) {
+			Response<?> response = userService.registerClient(registrationDto);
+			return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
+		}
+		return new ResponseEntity<>(validationResponse, HttpStatus.valueOf(validationResponse.getStatusCode()));
 	}
 
 	@GetMapping("/api/get/all/admin")
@@ -48,42 +52,41 @@ public class UserController {
 		Response<?> response = userService.getAllAdmin();
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
 	}
-	
+
 	@PostMapping("/reset-password")
 	public ResponseEntity<?> resetPassword(@RequestParam Long id, @RequestParam String newPassword) {
-	Response<Object> resetPassword = userService.resetPassword(id, newPassword);
-	return new ResponseEntity<>(resetPassword, HttpStatus.valueOf(resetPassword.getStatusCode()));
+		Response<Object> resetPassword = userService.resetPassword(id, newPassword);
+		return new ResponseEntity<>(resetPassword, HttpStatus.valueOf(resetPassword.getStatusCode()));
 	}
-	
+
 	@PostMapping("/api/register/staff")
-	public ResponseEntity<?> registerStaff(@RequestBody RegistrationDto registrationDto){
-		Response<?> response=userService.registerStaff(registrationDto);
+	public ResponseEntity<?> registerStaff(@RequestBody RegistrationDto registrationDto) {
+		Response<?> response = userService.registerStaff(registrationDto);
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
 	}
-	
+
 	@GetMapping("/api/filter/user")
-	public ResponseEntity<?> filterUser(@RequestParam Role role,@RequestParam(required = false) Long clinicId) {
-		Response<?> response = userService.filterUser(role,clinicId);
+	public ResponseEntity<?> filterUser(@RequestParam Role role, @RequestParam(required = false) Long clinicId) {
+		Response<?> response = userService.filterUser(role, clinicId);
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
 	}
-	
+
 	@GetMapping("/update/availability/of/doctor")
-	public ResponseEntity<?> updateAvailabilityOfDoctor(@RequestParam Long doctorId){
-		Response<?> response=userService.mentionAvailabilityOfDoctor(doctorId);
+	public ResponseEntity<?> updateAvailabilityOfDoctor(@RequestParam Long doctorId) {
+		Response<?> response = userService.mentionAvailabilityOfDoctor(doctorId);
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
 	}
-	
+
 	@GetMapping("/api/get/all/doctor")
-	public ResponseEntity<?> getAllDoctor(){
-		Response<?> response=userService.getAllDoctor();
+	public ResponseEntity<?> getAllDoctor() {
+		Response<?> response = userService.getAllDoctor();
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
 	}
-	
+
 	@GetMapping("/api/get/doctor/by/id")
-	public ResponseEntity<?> getDoctorById(@RequestParam Long id){
-		Response<?> response=userService.getDoctorById(id);
+	public ResponseEntity<?> getDoctorById(@RequestParam Long id) {
+		Response<?> response = userService.getDoctorById(id);
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatusCode()));
 	}
-	
-	
+
 }
