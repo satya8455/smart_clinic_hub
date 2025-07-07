@@ -35,12 +35,13 @@ public class RegistrationDto {
  
 	private Long  updatedBy;
 	
-	// clinic
+	private ClinicDto clinicDto;
+
+	
 	private Long clinicId;
 	private String clinicName;
 	private String clinicEmail;
 	private String clinicPhoneNo;
-
 	public Long getId() {
 		return id;
 	}
@@ -187,6 +188,16 @@ public class RegistrationDto {
 
 	public void setClinicPhoneNo(String clinicPhoneNo) {
 		this.clinicPhoneNo = clinicPhoneNo;
+	}
+
+	
+	
+	public ClinicDto getClinicDto() {
+		return clinicDto;
+	}
+
+	public void setClinicDto(ClinicDto clinicDto) {
+		this.clinicDto = clinicDto;
 	}
 
 	public RegistrationDto(Long id, String name, String email, String phone, String password, Role role, Long clinicId,

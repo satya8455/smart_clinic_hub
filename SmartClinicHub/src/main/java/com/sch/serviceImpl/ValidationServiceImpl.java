@@ -55,9 +55,9 @@ public class ValidationServiceImpl implements ValidationService {
 			errors.add("Provide valid user email id");
 		}
 
-		if (registrationDto.getPassword() == null || registrationDto.getPassword().isEmpty()) {
-			errors.add("Provide password");
-		}
+//		if (registrationDto.getPassword() == null || registrationDto.getPassword().isEmpty()) {
+//			errors.add("Provide password");
+//		}
 
 		if (registrationDto.getPhone() == null || registrationDto.getPhone().isEmpty()
 				|| !registrationDto.getPhone().matches("^(\\+91)?\\d{10}$")) {
@@ -68,16 +68,16 @@ public class ValidationServiceImpl implements ValidationService {
 			errors.add("Provide address details");
 		}
 
-		if (registrationDto.getClinicName() == null || registrationDto.getClinicName().isEmpty()) {
+		if (registrationDto.getClinicDto().getName() == null || registrationDto.getClinicDto().getName().isEmpty()) {
 			errors.add("Clinic name is required");
 		}
 
-		if (registrationDto.getClinicEmail() == null || registrationDto.getClinicEmail().isEmpty()) {
+		if (registrationDto.getClinicDto().getEmail()  == null || registrationDto.getClinicDto().getEmail().isEmpty()) {
 			errors.add("Provide clinic email");
 		}
 
-		if (registrationDto.getClinicPhoneNo() == null || registrationDto.getClinicPhoneNo().isEmpty()
-				|| !registrationDto.getClinicPhoneNo().matches("^(\\+91)?\\d{10}$")) {
+		if (registrationDto.getClinicDto().getPhone()  == null || registrationDto.getClinicDto().getPhone().isEmpty()
+				|| !registrationDto.getClinicDto().getPhone().matches("^(\\+91)?\\d{10}$")) {
 			errors.add("Provide valid clinic phone number");
 		}
 
